@@ -26,6 +26,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
     override fun refreshUI(from: Bone?, to: Bone?) {
 
         val manager = (managerProvider ?: return)()
+        if (manager.isStateSaved) return
 
         val fragment = bone.fingertip?.sibling as? Fragment ?: return
 

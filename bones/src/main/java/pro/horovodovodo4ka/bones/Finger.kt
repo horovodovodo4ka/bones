@@ -67,7 +67,7 @@ abstract class Finger(
 
         add(phalanx)
         stack.add(phalanx)
-        phalanx.isActive = true
+        phalanx.isActive = isActive
 
         transitionType = PUSHING
         sibling?.refreshUI(last, phalanx)
@@ -115,7 +115,7 @@ abstract class Finger(
 
         stack.clear()
         stack.addAll(reserved)
-        stack.last().isActive = true
+        stack.last().isActive = isActive
 
         transitionType = POPPING
         sibling?.refreshUI(oldBone, phalanx)
@@ -153,7 +153,7 @@ abstract class Finger(
         stack.addAll(reserved)
         add(with)
         stack.add(with)
-        stack.last().isActive = true
+        stack.last().isActive = isActive
 
 
         transitionType = REPLACING

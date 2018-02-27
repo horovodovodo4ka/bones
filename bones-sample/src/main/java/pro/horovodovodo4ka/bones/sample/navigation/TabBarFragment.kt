@@ -1,6 +1,5 @@
 package pro.horovodovodo4ka.bones.sample.navigation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -18,10 +17,6 @@ import pro.horovodovodo4ka.bones.ui.delegates.WristNavigator
 import pro.horovodovodo4ka.bones.ui.extensions.indexOf
 
 class TabBar(vararg finger: Bone) : Wrist(*finger) {
-    init {
-        persistSibling = true
-    }
-
     override val seed = { TabBarFragment() }
 }
 
@@ -72,7 +67,6 @@ class TabBarFragment : Fragment(),
         super<Fragment>.onSaveInstanceState(outState)
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BonePersisterInterface>.onCreate(savedInstanceState)
         super<Fragment>.onCreate(savedInstanceState)

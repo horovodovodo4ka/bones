@@ -2,9 +2,7 @@ package pro.horovodovodo4ka.bones.sample.navigation
 
 import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

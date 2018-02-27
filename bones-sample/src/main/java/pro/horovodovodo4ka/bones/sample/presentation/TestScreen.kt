@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.fragment_phalanx_test.*
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Phalanx
 import pro.horovodovodo4ka.bones.extensions.uuid
-import pro.horovodovodo4ka.bones.sample.navigation.NavigationStackPresentable
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R.layout
+import pro.horovodovodo4ka.bones.sample.navigation.NavigationStackPresentable
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
 import java.util.Random

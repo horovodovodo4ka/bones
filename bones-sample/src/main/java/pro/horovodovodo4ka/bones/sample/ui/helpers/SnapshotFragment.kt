@@ -1,4 +1,4 @@
-package pro.horovodovodo4ka.bones.ui.helpers
+package pro.horovodovodo4ka.bones.sample.ui.helpers
 
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable

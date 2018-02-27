@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_tab_bar.*
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
@@ -17,27 +16,23 @@ import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
 import pro.horovodovodo4ka.bones.ui.delegates.attachTo
-import pro.horovodovodo4ka.bones.ui.helpers.SnapshotFragment
+import pro.horovodovodo4ka.bones.sample.ui.helpers.SnapshotFragment
 
 class MainActivity : AppCompatActivity(),
     SpineNavigatorInterface<Root> by SpineNavigator() {
 
     init {
-        // SpineNavigatorInterface
         managerProvider = ::getSupportFragmentManager
     }
 
     inner class Root(root: Bone) : Spine(root), Listener,
         Finger.Listener {
 
-        override val seed = ::getSeed
-
-        // for replacement on recreate
-        var holder: MainActivity = this@MainActivity
-
-        private fun getSeed(): MainActivity {
-            return holder
+        init {
+            persistSibling = true
         }
+
+        override val seed = { this@MainActivity }
 
         private var canExit = false
 
@@ -73,30 +68,54 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         bone = root ?: Root(
             TabBar(
                 NavigationStack(TestScreen()),
                 TestForm(),
                 TestScreen()
             )
-        ).also { root = it }
-        bone.holder = this
+        ).also {
+            root = it
+
+        }
+            bone.sibling = this
+            bone.isActive = true
+
+
+//            bone.attachTo(supportFragmentManager)
+
+//        bone.sibling = this
+//        bone.isActive = true
+//        bone.attachTo(supportFragmentManager)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        refreshUI()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+//        bone.isActive = false
     }
 
     override fun onResume() {
         super.onResume()
-        bone.isActive = true
-        bone.attachTo(supportFragmentManager)
+        refreshUI()
+//        bone.isActive = true
+//        bone.attachTo(supportFragmentManager)
     }
 
     override fun onPause() {
         super.onPause()
-        bone.isActive = false
-
-        // "clear" screen for not saving any fragment states to bundle when onSaveInstanceState called
-        with(supportFragmentManager) {
-            beginTransaction().replace(android.R.id.content, SnapshotFragment.snapshotFrom(findViewById(android.R.id.content))).commitNow()
-        }
+//        bone.isActive = false
+//
+//        // "clear" screen for not saving any fragment states to bundle when onSaveInstanceState called
+//        with(supportFragmentManager) {
+//            beginTransaction().replace(android.R.id.content, SnapshotFragment.snapshotFrom(findViewById(android.R.id.content))).commitNow()
+//        }
     }
 
 }
