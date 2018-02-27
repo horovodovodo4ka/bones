@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".navigation.NavigationStackFragment">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/AppTheme.NoActionBar.PopupOverlay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+    />
+
+    <FrameLayout
+            android:id="@+id/stack_fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+    </FrameLayout>
+    <Button
+            android:text="push"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/push_button" android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+    <Button
+            android:text="pop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/pop_button" app:layout_constraintEnd_toStartOf="@+id/push_button" android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+    <Button
+            android:text="replace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/replace_button" android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/push_button"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+    <Button
+            android:text="root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/to_root_button" app:layout_constraintEnd_toStartOf="@+id/replace_button" android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/pop_button"/>
+    <Button
+            android:text="modal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/modal_button" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+
+</android.support.constraint.ConstraintLayout>
