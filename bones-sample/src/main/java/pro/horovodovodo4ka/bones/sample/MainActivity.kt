@@ -7,7 +7,7 @@ import android.widget.Toast
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
-import pro.horovodovodo4ka.bones.Wrist.Listener
+import pro.horovodovodo4ka.bones.Wrist
 import pro.horovodovodo4ka.bones.sample.MainActivity.Root
 import pro.horovodovodo4ka.bones.sample.navigation.NavigationStack
 import pro.horovodovodo4ka.bones.sample.navigation.TabBar
@@ -15,8 +15,6 @@ import pro.horovodovodo4ka.bones.sample.presentation.TestForm
 import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
-import pro.horovodovodo4ka.bones.ui.delegates.attachTo
-import pro.horovodovodo4ka.bones.sample.ui.helpers.SnapshotFragment
 
 class MainActivity : AppCompatActivity(),
     SpineNavigatorInterface<Root> by SpineNavigator() {
@@ -25,7 +23,9 @@ class MainActivity : AppCompatActivity(),
         managerProvider = ::getSupportFragmentManager
     }
 
-    inner class Root(root: Bone) : Spine(root), Listener,
+    inner class Root(root: Bone) :
+        Spine(root),
+        Wrist.Listener,
         Finger.Listener {
 
         init {
@@ -40,7 +40,11 @@ class MainActivity : AppCompatActivity(),
             canExit = false
         }
 
-        override fun phalanxSwitched(from: Bone, to: Bone?, type: pro.horovodovodo4ka.bones.Finger.TransitionType) {
+        override fun phalanxSwitched(
+            from: Bone,
+            to: Bone?,
+            type: pro.horovodovodo4ka.bones.Finger.TransitionType
+        ) {
             canExit = false
         }
 
@@ -79,8 +83,10 @@ class MainActivity : AppCompatActivity(),
             root = it
 
         }
-            bone.sibling = this
-            bone.isActive = true
+        bone.sibling = this
+        bone.isActive = true
+
+        refreshUI()
 
 
 //            bone.attachTo(supportFragmentManager)
@@ -93,7 +99,7 @@ class MainActivity : AppCompatActivity(),
     override fun onStart() {
         super.onStart()
 
-        refreshUI()
+//        refreshUI()
     }
 
     override fun onDestroy() {
@@ -103,7 +109,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        refreshUI()
+//        refreshUI()
 //        bone.isActive = true
 //        bone.attachTo(supportFragmentManager)
     }

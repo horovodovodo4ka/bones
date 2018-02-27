@@ -1,6 +1,8 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,9 +10,11 @@ import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.DISMISSING
+import pro.horovodovodo4ka.bones.Spine.TransitionType.NONE
 import pro.horovodovodo4ka.bones.Spine.TransitionType.PRESENTING
 import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
+import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
 /**
  * Delegate that implements default Spine navigation.
@@ -54,11 +58,6 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
             }
 
             else -> {
-
-//                // make screenshot and place background due android strange behavior with nested fragments
-//                if (bone.transitionType != NONE) {
-//                    fromFragment?.freezeSnapshotAsBackground()
-//                }
 
                 when (bone.transitionType) {
                     PRESENTING -> {
@@ -113,22 +112,4 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
             }
         }
     }
-}
-
-fun Spine.attachTo(fragmentManager: FragmentManager) {
-    fragmentManager
-        .beginTransaction()
-        .replace(android.R.id.content, skull.sibling as Fragment)
-        .runOnCommit {
-            skull.sibling?.refreshUI()
-        }
-        .commit()
-
-}
-
-fun Spine.detachFrom(fragmentManager: FragmentManager) {
-    fragmentManager
-        .beginTransaction()
-        .remove(skull.sibling as Fragment)
-        .commit()
 }
