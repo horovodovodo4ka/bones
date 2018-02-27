@@ -19,12 +19,11 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
     override val containerId: Int = android.R.id.content
     override lateinit var bone: T
-    override lateinit var managerProvider: () -> FragmentManager
+    override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        if (!::managerProvider.isInitialized) return
-        val manager = managerProvider()
+        val manager = (managerProvider ?: return)()
         val fromFragment = from?.sibling
         val toFragment = to?.sibling
 

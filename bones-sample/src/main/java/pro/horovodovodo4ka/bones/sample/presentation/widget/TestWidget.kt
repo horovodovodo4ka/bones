@@ -61,11 +61,6 @@ class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet
         refreshText()
     }
 
-    override fun onRefresh() {
-        super.onRefresh()
-        refreshText()
-    }
-
     companion object {
         @SuppressLint("SimpleDateFormat")
         private val formatter = SimpleDateFormat("dd.MM.yyyy")

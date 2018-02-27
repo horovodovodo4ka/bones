@@ -21,12 +21,11 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigatorInterface<T> {
 
     override lateinit var bone: T
-    override lateinit var managerProvider: () -> FragmentManager
+    override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        if (!::managerProvider.isInitialized) return
-        val manager = managerProvider()
+        val manager = (managerProvider ?: return)()
 
         val fragment = bone.fingertip?.sibling as? Fragment ?: return
 

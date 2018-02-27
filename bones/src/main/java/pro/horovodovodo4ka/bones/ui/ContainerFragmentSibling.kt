@@ -24,5 +24,5 @@ interface ContainerFragmentSibling<T : Bone> : FragmentSibling<T> {
      * Lambda that provides FragmentManager for use with transitions.
      * Primarily used by navigation delegates eg [SpineNavigator], [WristNavigator], [FingerNavigator]
      */
-    var managerProvider: () -> FragmentManager
+    var managerProvider: (() -> FragmentManager)?
 }

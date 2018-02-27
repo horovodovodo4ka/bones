@@ -1,5 +1,8 @@
 package pro.horovodovodo4ka.bones.sample.presentation.widget
 
+import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
@@ -31,10 +34,8 @@ class TestDialog : DialogFragment(),
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_test_dialog, container, false)
 
-    override fun onStart() {
-        super.onStart()
-
-        disableBackIntercept()
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val calendar = Calendar.getInstance()
 
@@ -51,7 +52,16 @@ class TestDialog : DialogFragment(),
 
             bone.setDate(calendar.time)
         }
+    }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        bone.dismiss()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        dismiss()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

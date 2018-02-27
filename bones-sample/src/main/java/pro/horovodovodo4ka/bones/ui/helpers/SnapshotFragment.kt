@@ -11,8 +11,8 @@ import pro.horovodovodo4ka.bones.ui.extensions.takeScreenshot
 
 class SnapshotFragment : Fragment() {
     companion object {
-        fun snapshotFrom(fragment: Fragment) : SnapshotFragment {
-            val bg = BitmapDrawable(Resources.getSystem(), fragment.view?.takeScreenshot())
+        fun snapshotFrom(view: View) : SnapshotFragment {
+            val bg = BitmapDrawable(Resources.getSystem(), view.takeScreenshot())
             return SnapshotFragment().also { it.background = bg }
         }
     }

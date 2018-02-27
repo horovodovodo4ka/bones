@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_tab_bar.*
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity(),
             )
         ).also { root = it }
         bone.holder = this
-        bone.isActive = true
     }
 
     override fun onResume() {
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(),
 
         // "clear" screen for not saving any fragment states to bundle when onSaveInstanceState called
         with(supportFragmentManager) {
-            beginTransaction().replace(android.R.id.content, SnapshotFragment.snapshotFrom(fragments.last())).commitNow()
+            beginTransaction().replace(android.R.id.content, SnapshotFragment.snapshotFrom(findViewById(android.R.id.content))).commitNow()
         }
     }
 
