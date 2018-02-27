@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity(),
     inner class Root(root: Bone) :
         Spine(root),
         Wrist.Listener,
-        Finger.Listener {
+        Finger.Listener,
+        Spine.Listener {
 
         init {
             persistSibling = true
@@ -40,11 +41,11 @@ class MainActivity : AppCompatActivity(),
             canExit = false
         }
 
-        override fun phalanxSwitched(
-            from: Bone,
-            to: Bone?,
-            type: pro.horovodovodo4ka.bones.Finger.TransitionType
-        ) {
+        override fun phalanxSwitched(from: Bone, to: Bone?, type: Finger.TransitionType) {
+            canExit = false
+        }
+
+        override fun boneSwitched(from: Bone, to: Bone, type: TransitionType) {
             canExit = false
         }
 
@@ -81,47 +82,12 @@ class MainActivity : AppCompatActivity(),
             )
         ).also {
             root = it
-
         }
+
         bone.sibling = this
         bone.isActive = true
 
         refreshUI()
-
-
-//            bone.attachTo(supportFragmentManager)
-
-//        bone.sibling = this
-//        bone.isActive = true
-//        bone.attachTo(supportFragmentManager)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-//        refreshUI()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-//        bone.isActive = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        refreshUI()
-//        bone.isActive = true
-//        bone.attachTo(supportFragmentManager)
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        bone.isActive = false
-//
-//        // "clear" screen for not saving any fragment states to bundle when onSaveInstanceState called
-//        with(supportFragmentManager) {
-//            beginTransaction().replace(android.R.id.content, SnapshotFragment.snapshotFrom(findViewById(android.R.id.content))).commitNow()
-//        }
     }
 
 }

@@ -112,7 +112,7 @@ abstract class Spine(
     }
 
     private val listeners: List<Listener>
-        get() = parents.mapNotNull { it as? Listener }
+        get() = (parents + this).mapNotNull { it as? Listener }
 
     // endregion
 
