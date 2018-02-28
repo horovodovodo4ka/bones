@@ -2,7 +2,6 @@ package pro.horovodovodo4ka.bones.sample.presentation.widget
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,8 @@ import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 class WidgetDialogBone(val initialValue: Date?, private val callback: (Date) -> Unit) : Phalanx() {
     override val seed = { TestDialog() }

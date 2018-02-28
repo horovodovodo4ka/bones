@@ -74,7 +74,7 @@ open class NavigationStackFragment : Fragment(),
     }
 
     override fun onRefresh() {
-        super<BonePersisterInterface>.onRefresh()
+        super<FingerNavigatorInterface>.onRefresh()
 
         if (view == null) return
 
