@@ -78,8 +78,8 @@ abstract class Spine(
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.boneSwitched(target, skull, DISMISSING) }

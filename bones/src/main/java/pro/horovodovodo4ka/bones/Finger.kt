@@ -122,8 +122,8 @@ abstract class Finger(
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.phalanxSwitched(oldBone, phalanx, POPPING) }
@@ -161,8 +161,8 @@ abstract class Finger(
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.phalanxSwitched(oldBone, with, REPLACING) }
