@@ -1,6 +1,5 @@
 package pro.horovodovodo4ka.bones.sample
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
@@ -15,9 +14,15 @@ import pro.horovodovodo4ka.bones.sample.presentation.TestForm
 import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
+import pro.horovodovodo4ka.bones.ui.helpers.ActivityAppRestartCleaner
 
 class MainActivity : AppCompatActivity(),
-    SpineNavigatorInterface<Root> by SpineNavigator() {
+    SpineNavigatorInterface<Root> by SpineNavigator(),
+    ActivityAppRestartCleaner {
+
+    companion object {
+        private var root: Root? = null
+    }
 
     init {
         managerProvider = ::getSupportFragmentManager
@@ -35,7 +40,7 @@ class MainActivity : AppCompatActivity(),
 
         override val seed = { this@MainActivity }
 
-        private var canExit = false
+        var canExit = false
 
         override fun fingerSwitched(from: Int, to: Int) {
             canExit = false
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity(),
             canExit = false
         }
 
-        override fun boneSwitched(from: Bone, to: Bone, type: TransitionType) {
+        override fun boneSwitched(from: Bone, to: Bone, type: Spine.TransitionType) {
             canExit = false
         }
 
@@ -62,17 +67,22 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (bone.processBack()) super.onBackPressed()
+        if (bone.processBack()) {
+            finish()
+            // must clear all bones on manual exit
+            root = null
+        }
     }
 
-    companion object {
-        private var root: Root? = null
+    override fun onResume() {
+        super.onResume()
+
+        bone.canExit = false
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+        super<AppCompatActivity>.onCreate(savedInstanceState)
+        super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
 
         bone = root ?: Root(
             TabBar(
@@ -89,6 +99,5 @@ class MainActivity : AppCompatActivity(),
 
         refreshUI()
     }
-
 }
 

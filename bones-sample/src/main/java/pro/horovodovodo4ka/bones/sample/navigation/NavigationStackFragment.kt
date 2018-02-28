@@ -76,7 +76,7 @@ open class NavigationStackFragment : Fragment(),
     override fun onRefresh() {
         super<BonePersisterInterface>.onRefresh()
 
-        if (!isAdded) return
+        if (view == null) return
 
         val title = (bone.fingertip as? NavigationStackPresentable)?.fragmentTitle
         when (title) {

@@ -158,7 +158,7 @@ abstract class Bone(
                     it.overriddenSeed = bone.overriddenSeed ?: bone.seed
                     it.sibling = bone.sibling
                     it.syncSibling()
-                    it.sibling?.onBoneChanged()
+                    it.notifyChange()
                     return
                 }
         }
@@ -167,7 +167,7 @@ abstract class Bone(
         descendantsStore.add(bone)
         bone.parentBone = this
         if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
-        bone.sibling?.onBoneChanged()
+        bone.notifyChange()
     }
 
     /**
@@ -180,6 +180,7 @@ abstract class Bone(
     open fun remove(bone: Bone) {
         descendantsStore.remove(bone)
         bone.parentBone = null
+        bone.notifyChange()
     }
 
     /**

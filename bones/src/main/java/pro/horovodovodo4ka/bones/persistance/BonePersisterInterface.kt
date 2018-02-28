@@ -22,9 +22,10 @@ interface BonePersisterInterface<T : Bone> : BoneSibling<T> {
     fun onCreate(savedInstanceState: Bundle?) {
         savedInstanceState
             ?.getString(BONE_ID_KEY)
+            ?.let { Bone[it] }
             ?.also {
                 @Suppress("UNCHECKED_CAST")
-                bone = Bone[it] as T
+                bone = it as T
                 bone.sibling = this
             }
     }

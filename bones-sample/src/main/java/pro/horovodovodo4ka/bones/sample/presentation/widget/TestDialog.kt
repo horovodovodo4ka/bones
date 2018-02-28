@@ -49,11 +49,6 @@ class TestDialog : DialogFragment(),
         }
     }
 
-//    override fun onPause() {
-//        super.onPause()
-//        dismiss()
-//    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super<BonePersisterInterface>.onSaveInstanceState(outState)
         super<DialogFragment>.onSaveInstanceState(outState)
