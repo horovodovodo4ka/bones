@@ -12,17 +12,25 @@ import pro.horovodovodo4ka.bones.sample.navigation.NavigationStack
 import pro.horovodovodo4ka.bones.sample.navigation.TabBar
 import pro.horovodovodo4ka.bones.sample.presentation.TestForm
 import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
+import pro.horovodovodo4ka.bones.statesstore.EmergencyPersister
+import pro.horovodovodo4ka.bones.statesstore.EmergencyPersisterInterface
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
 import pro.horovodovodo4ka.bones.ui.helpers.ActivityAppRestartCleaner
 
+/**
+ * Demo activity.
+ * Uses [EmergencyPersister] for bone survive between configuration changes.
+ * Also uses [ActivityAppRestartCleaner] for cleanup fragments when activity restarts with some bundle data and cannot
+ * load bones which died on application terminate.
+ *
+ * @see EmergencyPersisterInterface
+ * @see ActivityAppRestartCleaner
+ */
 class MainActivity : AppCompatActivity(),
     SpineNavigatorInterface<Root> by SpineNavigator(),
+    EmergencyPersisterInterface<MainActivity> by EmergencyPersister(),
     ActivityAppRestartCleaner {
-
-    companion object {
-        private var root: Root? = null
-    }
 
     init {
         managerProvider = ::getSupportFragmentManager
@@ -67,15 +75,13 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        if (bone.processBack()) {
-            finish()
-            // must clear all bones on manual exit
-            root = null
-        }
+        if (bone.processBack()) finish()
     }
 
     override fun onResume() {
         super.onResume()
+
+        emergencyRemovePin()
 
         bone.canExit = false
     }
@@ -84,20 +90,34 @@ class MainActivity : AppCompatActivity(),
         super<AppCompatActivity>.onCreate(savedInstanceState)
         super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
 
-        bone = root ?: Root(
-            TabBar(
-                NavigationStack(TestScreen()),
-                TestForm(),
-                TestScreen()
+        if (!emergencyLoad(savedInstanceState, this)) {
+            bone = Root(
+                TabBar(
+                    NavigationStack(TestScreen()),
+                    TestForm(),
+                    TestScreen()
+                )
             )
-        ).also {
-            root = it
         }
 
         bone.sibling = this
         bone.isActive = true
 
         refreshUI()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        emergencyPin(outState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val storedBone = bone
+        emergencySave {
+            it.bone = storedBone
+        }
     }
 }
 

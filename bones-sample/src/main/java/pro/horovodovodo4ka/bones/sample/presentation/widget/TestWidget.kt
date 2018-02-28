@@ -31,7 +31,7 @@ class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 dismiss()
                 notifyChange()
             }
-            bone.present(dlg)
+            present(dlg)
         }
     }
 

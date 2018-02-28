@@ -5,9 +5,9 @@ import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Wrist
+import pro.horovodovodo4ka.bones.ui.delegates.FingerNavigator
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
 import pro.horovodovodo4ka.bones.ui.delegates.WristNavigator
-import pro.horovodovodo4ka.bones.ui.delegates.FingerNavigator
 
 /**
  * Base interface for fragments which are siblings of bone with navigation capabilities eg [Finger], [Spine], [Wrist].

@@ -15,7 +15,7 @@ import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.sample.navigation.NavigationStackPresentable
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
-import java.util.Random
+import java.util.*
 
 class TestScreen : Phalanx(), NavigationStackPresentable {
     override val seed = { ScreenFragment() }

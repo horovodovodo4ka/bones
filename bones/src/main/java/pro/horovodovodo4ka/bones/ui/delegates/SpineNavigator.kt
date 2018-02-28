@@ -1,8 +1,6 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -10,11 +8,8 @@ import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.DISMISSING
-import pro.horovodovodo4ka.bones.Spine.TransitionType.NONE
 import pro.horovodovodo4ka.bones.Spine.TransitionType.PRESENTING
-import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
-import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
 /**
  * Delegate that implements default Spine navigation.
@@ -39,10 +34,9 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                 manager
                     .beginTransaction()
                     .runOnCommit {
-                        toFragment.dialog.setOnDismissListener {
-                            from?.dismiss(from)
+                        toFragment.dialog?.setOnDismissListener {
+                            bone.dismiss(to)
                         }
-                        toFragment.showsDialog = false
                         super.refreshUI(from, to)
                         bone.skull.sibling?.refreshUI()
                     }
@@ -83,9 +77,8 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                             .commit()
                     }
                     else -> {
-                        // rebuild all spine stack
-                        val fragments = bone.vertebrae
-                            .mapNotNull { it.sibling as? Fragment }
+                        // Rebuild all spine stack. Weird, I know.
+                        val fragments = bone.vertebrae.mapNotNull { it.sibling as? Fragment }
 
                         fragments.forEach {
                             manager
@@ -94,13 +87,10 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                                     transaction.remove(it)
                                 }
                                 .commitNow()
-                        }
-
-                        fragments.forEachIndexed { index, fragment ->
                             manager
                                 .beginTransaction()
                                 .also { transaction ->
-                                    transaction.add(containerId, fragment)
+                                    transaction.add(containerId, it)
                                 }
                                 .commitNow()
                         }

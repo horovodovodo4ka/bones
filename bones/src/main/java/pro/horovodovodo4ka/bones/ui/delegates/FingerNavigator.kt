@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
-import android.support.v4.app.Fragment
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
