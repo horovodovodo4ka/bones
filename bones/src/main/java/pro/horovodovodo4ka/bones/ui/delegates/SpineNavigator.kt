@@ -40,7 +40,7 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                     .beginTransaction()
                     .runOnCommit {
                         toFragment.dialog.setOnDismissListener {
-                            from?.dismiss()
+                            from?.dismiss(from)
                         }
                         toFragment.showsDialog = false
                         super.refreshUI(from, to)
