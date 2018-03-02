@@ -31,7 +31,7 @@ class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet
                 dismiss()
                 notifyChange()
             }
-            bone.present(dlg)
+            present(dlg)
         }
     }
 
@@ -58,11 +58,6 @@ class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     override fun onBoneChanged() {
-        refreshText()
-    }
-
-    override fun onRefresh() {
-        super.onRefresh()
         refreshText()
     }
 

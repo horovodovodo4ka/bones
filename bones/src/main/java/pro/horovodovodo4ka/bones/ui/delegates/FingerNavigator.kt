@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
-import android.support.v4.app.Fragment
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
@@ -21,12 +21,12 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigatorInterface<T> {
 
     override lateinit var bone: T
-    override lateinit var managerProvider: () -> FragmentManager
+    override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        if (!::managerProvider.isInitialized) return
-        val manager = managerProvider()
+        val manager = (managerProvider ?: return)()
+        if (manager.isStateSaved) return
 
         val fragment = bone.fingertip?.sibling as? Fragment ?: return
 

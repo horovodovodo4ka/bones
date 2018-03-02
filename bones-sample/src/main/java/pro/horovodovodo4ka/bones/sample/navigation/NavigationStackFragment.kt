@@ -2,9 +2,7 @@ package pro.horovodovodo4ka.bones.sample.navigation
 
 import android.content.Context
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +30,19 @@ open class NavigationStackFragment : Fragment(),
     BonePersisterInterface<NavigationStack>,
     FingerNavigatorInterface<NavigationStack> by FingerNavigator(R.id.stack_fragment_container) {
 
+    // region ContainerFragmentSibling
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-
-        // FingerNavigatorInterface
         managerProvider = ::getChildFragmentManager
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        managerProvider = null
+    }
+
+    // endregion
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_navigation_stack, container, false)
@@ -69,14 +74,9 @@ open class NavigationStackFragment : Fragment(),
     }
 
     override fun onRefresh() {
-        super<BonePersisterInterface>.onRefresh()
+        super<FingerNavigatorInterface>.onRefresh()
 
-        if (!isAdded) return
-
-        TransitionManager.beginDelayedTransition(view as ConstraintLayout)
-
-        if (bone.phalanxes.size > 1) addNavigationToToolbar(toolbar, R.drawable.ic_arrow_back_white)
-        else removeNavigationFromToolbar(toolbar)
+        if (view == null) return
 
         val title = (bone.fingertip as? NavigationStackPresentable)?.fragmentTitle
         when (title) {
@@ -84,6 +84,9 @@ open class NavigationStackFragment : Fragment(),
             else -> {
                 toolbar.visibility = View.VISIBLE
                 toolbar.title = title
+
+                if (bone.phalanxes.size > 1) addNavigationToToolbar(toolbar, R.drawable.ic_arrow_back_white)
+                else removeNavigationFromToolbar(toolbar)
             }
         }
     }

@@ -17,12 +17,11 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
  */
 class WristNavigator<T : Wrist>(override val containerId: Int, private val animated: Boolean = false) : WristNavigatorInterface<T> {
     override lateinit var bone: T
-    override lateinit var managerProvider: () -> FragmentManager
+    override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        if (!::managerProvider.isInitialized) return
-        val manager = managerProvider()
+        val manager = (managerProvider ?: return)()
 
         val tabFragment = bone.activeBone.sibling as? Fragment ?: return
 

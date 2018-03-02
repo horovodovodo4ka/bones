@@ -34,6 +34,9 @@ abstract class Spine(
     val skull: Bone
         get() = stack.last()
 
+    val vertebrae: Array<Bone>
+        get() = stack.toTypedArray()
+
     /**
      * Adds bone to stack. It becomes skull
      *
@@ -44,13 +47,11 @@ abstract class Spine(
 
         add(bone)
         stack.add(bone)
-        bone.isActive = true
+        bone.isActive = isActive
 
         transitionType = PRESENTING
         sibling?.refreshUI(last, skull)
         transitionType = NONE
-
-        last.isActive = false
 
         listeners.forEach { it.boneSwitched(last, skull, PRESENTING) }
     }
@@ -70,15 +71,15 @@ abstract class Spine(
 
         stack.clear()
         stack.addAll(reserved)
-        stack.last().isActive = true
+        stack.last().isActive = isActive
 
         transitionType = DISMISSING
         sibling?.refreshUI(target, skull)
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.boneSwitched(target, skull, DISMISSING) }
@@ -94,7 +95,7 @@ abstract class Spine(
             if (field == value) return
             field = value
             syncSibling()
-            skull.isActive = value
+            stack.forEach { it.isActive = value }
             descendantsStore
                 .subtract(stack)
                 .filter { !it.ignoreAutoActivation || !value }
@@ -111,7 +112,7 @@ abstract class Spine(
     }
 
     private val listeners: List<Listener>
-        get() = parents.mapNotNull { it as? Listener }
+        get() = (parents + this).mapNotNull { it as? Listener }
 
     // endregion
 

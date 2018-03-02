@@ -1,5 +1,6 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
+import android.annotation.SuppressLint
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -7,10 +8,8 @@ import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.DISMISSING
-import pro.horovodovodo4ka.bones.Spine.TransitionType.NONE
 import pro.horovodovodo4ka.bones.Spine.TransitionType.PRESENTING
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
-import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
 /**
  * Delegate that implements default Spine navigation.
@@ -19,20 +18,31 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
     override val containerId: Int = android.R.id.content
     override lateinit var bone: T
-    override lateinit var managerProvider: () -> FragmentManager
+    override var managerProvider: (() -> FragmentManager)? = null
 
+    @SuppressLint("CommitTransaction")
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        if (!::managerProvider.isInitialized) return
-        val manager = managerProvider()
-        val fromFragment = from?.sibling
-        val toFragment = to?.sibling
+        val manager = (managerProvider ?: return)()
+        if (manager.isStateSaved) return
+
+        val fromFragment = from?.sibling as? Fragment
+        val toFragment = to?.sibling as? Fragment
 
         when {
             toFragment is DialogFragment && bone.transitionType == PRESENTING -> {
-                toFragment.show(manager, null)
-                super.refreshUI(from, to)
-                bone.skull.sibling?.refreshUI()
+                manager
+                    .beginTransaction()
+                    .runOnCommit {
+                        toFragment.dialog?.setOnDismissListener {
+                            bone.dismiss(to)
+                        }
+                        super.refreshUI(from, to)
+                        bone.skull.sibling?.refreshUI()
+                    }
+                    .also {
+                        toFragment.show(it, null)
+                    }
             }
 
             fromFragment is DialogFragment && bone.transitionType == DISMISSING -> {
@@ -41,46 +51,55 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                 bone.skull.sibling?.refreshUI()
             }
 
-            toFragment is Fragment -> {
-                val transition = when (bone.transitionType) {
-                    PRESENTING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-                    DISMISSING -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-                    else -> FragmentTransaction.TRANSIT_NONE
-                }
+            else -> {
 
-                // make screenshot and place background due android strange behavior with nested fragments
-                if (bone.transitionType != NONE) {
-                    manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
-                }
+                when (bone.transitionType) {
+                    PRESENTING -> {
+                        manager
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .add(containerId, toFragment as Fragment)
+                            .runOnCommit {
+                                super.refreshUI(from, to)
+                                bone.skull.sibling?.refreshUI()
+                            }
+                            .commit()
+                    }
+                    DISMISSING -> {
+                        manager
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                            .remove(fromFragment as Fragment)
+                            .runOnCommit {
+                                super.refreshUI(from, to)
+                                bone.skull.sibling?.refreshUI()
+                            }
+                            .commit()
+                    }
+                    else -> {
+                        // Rebuild all spine stack. Weird, I know.
+                        val fragments = bone.vertebrae.mapNotNull { it.sibling as? Fragment }
 
-                manager
-                    .beginTransaction()
-                    .setTransition(transition)
-                    .replace(containerId, toFragment)
-                    .runOnCommit {
+                        fragments.forEach {
+                            manager
+                                .beginTransaction()
+                                .also { transaction ->
+                                    transaction.remove(it)
+                                }
+                                .commitNow()
+                            manager
+                                .beginTransaction()
+                                .also { transaction ->
+                                    transaction.add(containerId, it)
+                                }
+                                .commitNow()
+                        }
+
                         super.refreshUI(from, to)
                         bone.skull.sibling?.refreshUI()
                     }
-                    .commit()
+                }
             }
         }
     }
-}
-
-fun Spine.attachTo(fragmentManager: FragmentManager) {
-    fragmentManager
-        .beginTransaction()
-        .replace(android.R.id.content, skull.sibling as Fragment)
-        .runOnCommit {
-            skull.sibling?.refreshUI()
-        }
-        .commit()
-
-}
-
-fun Spine.detachFrom(fragmentManager: FragmentManager) {
-    fragmentManager
-        .beginTransaction()
-        .remove(skull.sibling as Fragment)
-        .commit()
 }

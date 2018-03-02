@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_test_dialog.*
 import pro.horovodovodo4ka.bones.Phalanx
-import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
-import pro.horovodovodo4ka.bones.ui.extensions.disableBackIntercept
 import java.util.Calendar
 import java.util.Date
 
@@ -31,10 +29,8 @@ class TestDialog : DialogFragment(),
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_test_dialog, container, false)
 
-    override fun onStart() {
-        super.onStart()
-
-        disableBackIntercept()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val calendar = Calendar.getInstance()
 
@@ -51,7 +47,6 @@ class TestDialog : DialogFragment(),
 
             bone.setDate(calendar.time)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

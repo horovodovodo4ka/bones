@@ -67,7 +67,7 @@ abstract class Finger(
 
         add(phalanx)
         stack.add(phalanx)
-        phalanx.isActive = true
+        phalanx.isActive = isActive
 
         transitionType = PUSHING
         sibling?.refreshUI(last, phalanx)
@@ -115,15 +115,15 @@ abstract class Finger(
 
         stack.clear()
         stack.addAll(reserved)
-        stack.last().isActive = true
+        stack.last().isActive = isActive
 
         transitionType = POPPING
         sibling?.refreshUI(oldBone, phalanx)
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.phalanxSwitched(oldBone, phalanx, POPPING) }
@@ -153,7 +153,7 @@ abstract class Finger(
         stack.addAll(reserved)
         add(with)
         stack.add(with)
-        stack.last().isActive = true
+        stack.last().isActive = isActive
 
 
         transitionType = REPLACING
@@ -161,8 +161,8 @@ abstract class Finger(
         transitionType = NONE
 
         removed.forEach {
-            remove(it)
             it.isActive = false
+            remove(it)
         }
 
         listeners.forEach { it.phalanxSwitched(oldBone, with, REPLACING) }
@@ -195,7 +195,7 @@ abstract class Finger(
     }
 
     private val listeners: List<Listener>
-        get() = parents.mapNotNull { it as? Listener }
+        get() = (parents + this).mapNotNull { it as? Listener }
 
     // endregion
 

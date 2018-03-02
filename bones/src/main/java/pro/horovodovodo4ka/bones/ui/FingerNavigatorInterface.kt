@@ -2,7 +2,6 @@ package pro.horovodovodo4ka.bones.ui
 
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.extensions.processBackPress
-import pro.horovodovodo4ka.bones.ui.ContainerFragmentSibling
 
 /**
  * Default implementation for fragments which are siblings of finger.

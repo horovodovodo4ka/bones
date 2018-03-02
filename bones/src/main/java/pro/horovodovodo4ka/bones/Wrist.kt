@@ -50,7 +50,7 @@ abstract class Wrist(
 
             activeBone.isActive = false
             field = value
-            activeBone.isActive = true
+            activeBone.isActive = isActive
 
             transitionType = if (oldIndex > value) DECREMENTING else INCREMENTING
             sibling?.refreshUI(fingers[oldIndex], fingers[value])
@@ -97,7 +97,7 @@ abstract class Wrist(
     }
 
     private val listeners: List<Listener>
-        get() = parents.mapNotNull { it as? Listener }
+        get() = (parents + this).mapNotNull { it as? Listener }
 
     // endregion
 }
