@@ -26,8 +26,8 @@ class FormScreen : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bone.add(dateField1.bone, true)
-        bone.add(dateField2.bone, true)
+        bone.add(dateField1.bone)
+        bone.add(dateField2.bone)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -1,9 +1,12 @@
 package pro.horovodovodo4ka.bones.extensions
 
+import android.support.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneInterface
+import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.NavigationBone
 import pro.horovodovodo4ka.bones.Spine
+import pro.horovodovodo4ka.bones.ui.FragmentSibling
 
 /**
  * Finds closest bone (BoneInterface) in parents.
@@ -52,4 +55,20 @@ fun Bone.show(bone: Bone) {
  */
 fun Bone.goBack() {
     closest<NavigationBone> { it.goBack() }
+}
+
+/**
+ * @return **false** if processed backPress
+ */
+@CallSuper
+fun Bone.processBackPress(): Boolean {
+    return (sibling as? FragmentSibling<*>)?.processBackPress() ?: true
+}
+
+/**
+ * Force link bone with sibling.
+ */
+inline fun <reified T : Bone> T.glueWith(sibling: BoneSibling<T>) {
+    this.sibling = sibling
+    sibling.bone = this
 }

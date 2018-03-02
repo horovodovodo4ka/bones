@@ -1,13 +1,12 @@
 package pro.horovodovodo4ka.bones.extensions
 
-import android.support.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
-import pro.horovodovodo4ka.bones.ui.FragmentSibling
+import pro.horovodovodo4ka.bones.BoneSibling
 
 /**
- * @return **false** if processed backPress
+ * Force link bone with sibling.
  */
-@CallSuper
-fun Bone.processBackPress(): Boolean {
-    return (sibling as? FragmentSibling<*>)?.processBackPress() ?: true
+inline fun <reified T : Bone> BoneSibling<T>.glueWith(bone: T) {
+    this.bone = bone
+    bone.sibling = this
 }

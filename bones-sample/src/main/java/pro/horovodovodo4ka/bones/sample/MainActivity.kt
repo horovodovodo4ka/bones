@@ -7,7 +7,8 @@ import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Wrist
-import pro.horovodovodo4ka.bones.sample.MainActivity.Root
+import pro.horovodovodo4ka.bones.extensions.glueWith
+import pro.horovodovodo4ka.bones.extensions.processBackPress
 import pro.horovodovodo4ka.bones.sample.navigation.NavigationStack
 import pro.horovodovodo4ka.bones.sample.navigation.TabBar
 import pro.horovodovodo4ka.bones.sample.presentation.TestForm
@@ -19,6 +20,41 @@ import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
 import pro.horovodovodo4ka.bones.ui.helpers.ActivityAppRestartCleaner
 
 /**
+ * Demo bone. Realize support of exiting from app and back presses.
+ */
+class RootBone(root: Bone) :
+    Spine(root),
+    Wrist.Listener,
+    Finger.Listener,
+    Spine.Listener {
+
+    init {
+        persistSibling = true
+    }
+
+    private var canExit = false
+
+    fun dropExitStatus() {
+        canExit = false
+    }
+
+    override fun fingerSwitched(from: Int, to: Int) = dropExitStatus()
+    override fun phalanxSwitched(from: Bone, to: Bone?, type: Finger.TransitionType) = dropExitStatus()
+    override fun boneSwitched(from: Bone, to: Bone, type: Spine.TransitionType) = dropExitStatus()
+
+    fun processBack(preExitCallback: () -> Unit): Boolean {
+        if (processBackPress()) {
+            if (!canExit) {
+                preExitCallback()
+                canExit = true
+                return false
+            }
+        }
+        return canExit
+    }
+}
+
+/**
  * Demo activity.
  * Uses [EmergencyPersister] for bone survive between configuration changes.
  * Also uses [ActivityAppRestartCleaner] for cleanup fragments when activity restarts with some bundle data and cannot
@@ -28,7 +64,7 @@ import pro.horovodovodo4ka.bones.ui.helpers.ActivityAppRestartCleaner
  * @see ActivityAppRestartCleaner
  */
 class MainActivity : AppCompatActivity(),
-    SpineNavigatorInterface<Root> by SpineNavigator(),
+    SpineNavigatorInterface<RootBone> by SpineNavigator(),
     EmergencyPersisterInterface<MainActivity> by EmergencyPersister(),
     ActivityAppRestartCleaner {
 
@@ -36,46 +72,8 @@ class MainActivity : AppCompatActivity(),
         managerProvider = ::getSupportFragmentManager
     }
 
-    inner class Root(root: Bone) :
-        Spine(root),
-        Wrist.Listener,
-        Finger.Listener,
-        Spine.Listener {
-
-        init {
-            persistSibling = true
-        }
-
-        override val seed = { this@MainActivity }
-
-        var canExit = false
-
-        override fun fingerSwitched(from: Int, to: Int) {
-            canExit = false
-        }
-
-        override fun phalanxSwitched(from: Bone, to: Bone?, type: Finger.TransitionType) {
-            canExit = false
-        }
-
-        override fun boneSwitched(from: Bone, to: Bone, type: Spine.TransitionType) {
-            canExit = false
-        }
-
-        fun processBack(): Boolean {
-            if (processBackPress()) {
-                if (!canExit) {
-                    Toast.makeText(this@MainActivity, """Press "back" button again to exit.""", Toast.LENGTH_LONG).show()
-                    canExit = true
-                    return false
-                }
-            }
-            return canExit
-        }
-    }
-
     override fun onBackPressed() {
-        if (bone.processBack()) finish()
+        if (bone.processBack { Toast.makeText(this, """Press "back" button again to exit.""", Toast.LENGTH_LONG).show() }) finish()
     }
 
     override fun onResume() {
@@ -83,7 +81,7 @@ class MainActivity : AppCompatActivity(),
 
         emergencyRemovePin()
 
-        bone.canExit = false
+        bone.dropExitStatus()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +89,7 @@ class MainActivity : AppCompatActivity(),
         super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
 
         if (!emergencyLoad(savedInstanceState, this)) {
-            bone = Root(
+            bone = RootBone(
                 TabBar(
                     NavigationStack(TestScreen()),
                     TestForm(),
@@ -100,7 +98,7 @@ class MainActivity : AppCompatActivity(),
             )
         }
 
-        bone.sibling = this
+        glueWith(bone)
         bone.isActive = true
 
         refreshUI()
@@ -115,6 +113,7 @@ class MainActivity : AppCompatActivity(),
         super.onDestroy()
 
         val storedBone = bone
+        storedBone.sibling = null // remove strong pointer to existing activity instance
         emergencySave {
             it.bone = storedBone
         }

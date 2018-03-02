@@ -61,16 +61,6 @@ abstract class Bone(
     val id = String.uuid()
 
     /**
-     * ID of bone's sibling. Optional property used for binding visual parts (siblings) of bones when recreating view states of bones.
-     * Example: in fragment with custom views which are bone's sibling and can be recreated, we must relink bones of those views back to their parent.
-     * We can identify that views only by unique ID inside parent bone. This is really important to preserve callbacks and links to objects.
-     *
-     * @see [Bone.add]
-     * @see [BoneSibling.link]
-     */
-    open val siblingId: Int = 0
-
-    /**
      * Marks bone as active or inactive. On activation bone creates it's sibling. On deactivation unlink it from self.
      * That means that after deactivation siblings still able work with bone but bone can't.
      * Activeness status also transferred to bone's descendants (behavior can be overridden by subclasses).
@@ -117,10 +107,12 @@ abstract class Bone(
 
     /**
      * Lambda which creates new instance of bone's sibling.
+     * Must be overridden **or** property [persistSibling] must be set to *true* and [sibling] set manually.
      *
-     * @see [Bone.sibling]
+     * @see [sibling]
+     * @see [persistSibling]
      */
-    abstract val seed: () -> BoneSibling<out Bone>
+    open val seed: () -> BoneSibling<out Bone> = { throw NotImplementedError("Default seed do nothing: override it or set 'persistSibling = true' and set sibling manually") }
     private var overriddenSeed: (() -> BoneSibling<out Bone>)? = null
 
     /**
@@ -142,42 +134,40 @@ abstract class Bone(
     /**
      * Adds descendant to this bone hierarchy. Also removes it from previous hierarchy.
      * Sets new bone's *parentBone* to self.
+     * Also checks if bone already exist (using [equals] function). If so then transfers sibling and seed to old bone and replaces bone in sibling to old.
      *
      * @param bone bone been added as descendant.
-     * @param syncBySiblingId if *true* then tries to find descendant with the same *siblingId* and transfer seed from new bone to it instead of adding.
-     *          Used with *inner class* bones which are created by their sibling. Useful for retain links, subscribers etc.
      *
-     * @see [Bone.parentBone]
+     * @see [parentBone]
      */
-    @CallSuper
-    open fun add(bone: Bone, syncBySiblingId: Boolean = false) {
-        if (syncBySiblingId) {
-            descendantsStore
-                .firstOrNull { it.siblingId > 0 && it.siblingId == bone.siblingId }
-                ?.also {
-                    it.overriddenSeed = bone.overriddenSeed ?: bone.seed
-                    it.sibling = bone.sibling
-                    it.syncSibling()
-                    it.notifyChange()
-                    return
+    fun add(bone: Bone) {
+        val oldBone = descendantsStore.find { it == bone }
+        when (oldBone) {
+            null -> {
+                bone.parentBone?.remove(bone)
+                descendantsStore.add(bone)
+                bone.parentBone = this
+                if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
+                bone.notifyChange()
+            }
+            else -> {
+                with(oldBone) {
+                    overriddenSeed = bone.overriddenSeed ?: bone.seed
+                    sibling = bone.sibling
+                    syncSibling()
+                    notifyChange()
                 }
+            }
         }
-
-        bone.parentBone?.remove(bone)
-        descendantsStore.add(bone)
-        bone.parentBone = this
-        if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
-        bone.notifyChange()
     }
 
     /**
      * Removes bone from descendants. Sets it's *parentBone* to null.
      * @param bone bone to be removed.
      *
-     * @see [Bone.parentBone]
+     * @see [parentBone]
      */
-    @CallSuper
-    open fun remove(bone: Bone) {
+    fun remove(bone: Bone) {
         descendantsStore.remove(bone)
         bone.parentBone = null
         bone.notifyChange()
