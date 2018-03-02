@@ -1,6 +1,5 @@
 package pro.horovodovodo4ka.bones
 
-import android.support.annotation.CallSuper
 import pro.horovodovodo4ka.bones.extensions.uuid
 import java.lang.ref.WeakReference
 
