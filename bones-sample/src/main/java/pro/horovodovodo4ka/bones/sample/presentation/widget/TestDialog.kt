@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_test_dialog.*
 import pro.horovodovodo4ka.bones.Phalanx
+import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
+import pro.horovodovodo4ka.bones.ui.extensions.interceptBackPress
 import java.util.Calendar
 import java.util.Date
 
@@ -31,6 +33,8 @@ class TestDialog : DialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        interceptBackPress { bone.dismiss() }
 
         val calendar = Calendar.getInstance()
 

@@ -24,6 +24,8 @@ inline fun <reified T : BoneInterface> Bone.closest(filter: (T) -> Boolean = { t
 /**
  * Shorthand for finding first Spine and presenting bone on it.
  *
+ * @param bone bone to present
+ *
  * @see [Spine.present]
  */
 fun Bone.present(bone: Bone? = null) {
@@ -32,11 +34,14 @@ fun Bone.present(bone: Bone? = null) {
 
 /**
  * Shorthand for finding first Spine and dismiss bone from it.
+ * If parameter not passed then trying dismiss bone on which this method called
+ *
+ * @param bone bone to dismiss
  *
  * @see [Spine.dismiss]
  */
 fun Bone.dismiss(bone: Bone? = null) {
-    closest<Spine>()?.dismiss(bone)
+    closest<Spine>()?.dismiss(bone ?: this)
 }
 
 /**
