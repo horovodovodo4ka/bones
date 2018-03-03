@@ -16,11 +16,15 @@ import pro.horovodovodo4ka.bones.ui.extensions.interceptBackPress
 import java.util.Calendar
 import java.util.Date
 
-class WidgetDialogBone(val initialValue: Date?, private val callback: (Date) -> Unit) : Phalanx() {
+class WidgetDialogBone(value: Date?) : Phalanx() {
+    var value: Date? = value
+        private set
+
     override val seed = { TestDialog() }
 
     fun setDate(date: Date) {
-        callback(date)
+        value = date
+        notifyChange()
     }
 }
 
@@ -38,7 +42,7 @@ class TestDialog : DialogFragment(),
 
         val calendar = Calendar.getInstance()
 
-        bone.initialValue?.also { calendar.time = it }
+        bone.value?.also { calendar.time = it }
 
         datePicker.init(
             calendar.get(Calendar.YEAR),

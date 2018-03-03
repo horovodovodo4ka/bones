@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.view_test_widget.view.*
+import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.extensions.glueWith
@@ -14,19 +15,24 @@ import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.ViewBone
 import pro.horovodovodo4ka.bones.ui.delegates.Content
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 class WidgetBone : ViewBone() {
     var value: Date? = null
 
     fun pickDate() {
-        val dlg = WidgetDialogBone(value) {
-            value = it
-            dismiss()
-            notifyChange()
-        }
+        val dlg = WidgetDialogBone(value)
+        subscribe(dlg)
         present(dlg)
     }
+
+    override fun onBoneChanged(bone: Bone) {
+        bone as WidgetDialogBone
+        value = bone.value
+        dismiss(bone)
+        notifyChange()
+    }
+
 }
 
 class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :

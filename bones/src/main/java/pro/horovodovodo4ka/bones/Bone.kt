@@ -178,6 +178,26 @@ abstract class Bone(
      */
     fun notifyChange() {
         sibling?.onBoneChanged()
+        notifySubscribers()
     }
+    // Callback-less linking
+    private val subscribers = mutableSetOf<String>()
+
+    private fun notifySubscribers() {
+        subscribers.retainAll { Bone[it] != null }
+        subscribers.mapNotNull { Bone[it] }.forEach { it.onBoneChanged(this) }
+    }
+
+    protected fun subscribe(source: Bone) {
+        source.subscribers.add(id)
+    }
+
+    protected fun unsubscribe(from: Bone) {
+        from.subscribers.remove(id)
+    }
+
+    protected open fun onBoneChanged(bone: Bone) {}
+
 }
+
 
