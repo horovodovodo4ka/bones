@@ -1,34 +1,31 @@
 package pro.horovodovodo4ka.bones.sample.presentation.widget
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_test_dialog.*
 import pro.horovodovodo4ka.bones.Phalanx
-import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
-import pro.horovodovodo4ka.bones.ui.extensions.interceptBackPress
+import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
 import java.util.Calendar
 import java.util.Date
 
 class WidgetDialogBone(value: Date?) : Phalanx() {
-    var value: Date? = value
-        private set
-
     override val seed = { TestDialog() }
 
-    fun setDate(date: Date) {
-        value = date
-        notifyChange()
-    }
+    var value: Date? = value
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
 }
 
-class TestDialog : DialogFragment(),
+class TestDialog : BoneDialogFragment<WidgetDialogBone>(),
     FragmentSibling<WidgetDialogBone> by Page(),
     BonePersisterInterface<WidgetDialogBone> {
 
@@ -37,8 +34,6 @@ class TestDialog : DialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        interceptBackPress { bone.dismiss() }
 
         val calendar = Calendar.getInstance()
 
@@ -53,17 +48,17 @@ class TestDialog : DialogFragment(),
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, date)
 
-            bone.setDate(calendar.time)
+            bone.value = calendar.time
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super<BonePersisterInterface>.onSaveInstanceState(outState)
-        super<DialogFragment>.onSaveInstanceState(outState)
+        super<BoneDialogFragment>.onSaveInstanceState(outState)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BonePersisterInterface>.onCreate(savedInstanceState)
-        super<DialogFragment>.onCreate(savedInstanceState)
+        super<BoneDialogFragment>.onCreate(savedInstanceState)
     }
 }
