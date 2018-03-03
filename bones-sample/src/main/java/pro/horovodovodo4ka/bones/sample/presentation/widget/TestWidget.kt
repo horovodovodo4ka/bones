@@ -15,7 +15,7 @@ import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.ViewBone
 import pro.horovodovodo4ka.bones.ui.delegates.Content
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 class WidgetBone : ViewBone() {
     var value: Date? = null
