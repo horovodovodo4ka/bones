@@ -4,11 +4,13 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.util.Log
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.DISMISSING
 import pro.horovodovodo4ka.bones.Spine.TransitionType.PRESENTING
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
+import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
 
 /**
  * Delegate that implements default Spine navigation.
@@ -20,6 +22,7 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
     override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
+        super.refreshUI(from, to)
 
         val manager = (managerProvider ?: return)()
         if (manager.isStateSaved) return
@@ -34,13 +37,13 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .also {
                         when (toFragment) {
-                            is DialogFragment -> it.add(toFragment, null)
+                            is BoneDialogFragment<*> -> it.add(toFragment, null)
+                            is DialogFragment -> it.add(containerId, toFragment)
+                                .also {
+                                    Log.w("Bones", "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead.")
+                                }
                             else -> it.add(containerId, toFragment)
                         }
-                    }
-                    .runOnCommit {
-                        super.refreshUI(from, to)
-                        bone.skull.sibling?.refreshUI()
                     }
                     .commit()
             }
@@ -49,40 +52,9 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .remove(fromFragment as Fragment)
-                    .runOnCommit {
-                        super.refreshUI(from, to)
-                        bone.skull.sibling?.refreshUI()
-                    }
                     .commit()
             }
-            else -> {
-                // Rebuild all spine stack. Weird, I know.
-                val fragments = bone.vertebrae.mapNotNull { it.sibling as? Fragment }
-
-                manager.fragments.forEach {
-                    manager
-                        .beginTransaction()
-                        .also { transaction ->
-                            transaction.remove(it)
-                        }
-                        .commitNow()
-                }
-
-                fragments.forEach {
-                    manager
-                        .beginTransaction()
-                        .also { transaction ->
-                            when (it) {
-                                is DialogFragment -> transaction.add(it, null)
-                                else -> transaction.add(containerId, it)
-                            }
-                        }
-                        .commitNow()
-                }
-
-                super.refreshUI(from, to)
-                bone.skull.sibling?.refreshUI()
-            }
+            else -> Unit
         }
     }
 }

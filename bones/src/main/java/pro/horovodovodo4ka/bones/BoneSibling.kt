@@ -38,7 +38,7 @@ interface BoneSibling<T : Bone> {
     }
 
     /**
-     * Helper method. Can be used by bone to notify it's sibling about changes.
+     * Called each time bone calls [Bone.notifyChange] method. Can be used to refresh sibling's content to new bone state.
      */
     fun onBoneChanged() {}
 }

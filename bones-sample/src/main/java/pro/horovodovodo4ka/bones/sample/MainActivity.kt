@@ -1,6 +1,7 @@
 package pro.horovodovodo4ka.bones.sample
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import pro.horovodovodo4ka.bones.Bone
@@ -86,9 +87,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<AppCompatActivity>.onCreate(savedInstanceState)
-        super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
 
         if (!emergencyLoad(savedInstanceState, this)) {
+
+            super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
+
             bone = RootBone(
                 TabBar(
                     NavigationStack(TestScreen()),
@@ -96,12 +99,19 @@ class MainActivity : AppCompatActivity(),
                     TestScreen()
                 )
             )
+
+            glueWith(bone)
+            bone.isActive = true
+
+            supportFragmentManager
+                .beginTransaction()
+                .replace(android.R.id.content, bone.vertebrae.first().sibling as Fragment)
+                .commit()
+
+        } else {
+            glueWith(bone)
         }
 
-        glueWith(bone)
-        bone.isActive = true
-
-        refreshUI()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
