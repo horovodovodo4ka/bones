@@ -141,7 +141,7 @@ abstract class Bone(
         val oldBone = descendantsStore.find { it == bone }
         when (oldBone) {
             null -> {
-                bone.parentBone?.remove(bone)
+                bone.parentBone?.descendantsStore?.remove(bone)
                 descendantsStore.add(bone)
                 bone.parentBone = this
                 if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
@@ -172,7 +172,7 @@ abstract class Bone(
 
     /**
      * Notifies sibling that something in bone data has been changed.
-     * Also see [BoneSibling.refreshUI]
+     * Also see [BoneSibling.refreshUI].
      */
     fun notifyChange() {
         sibling?.onBoneChanged()
@@ -190,14 +190,29 @@ abstract class Bone(
         }
     }
 
+    /**
+     * Subscribes self to changes of other bone. When target bone is changed it calls [notifyChange] method. This causes call [onBoneChanged] on subscribers.
+     *
+     * @param source target bone
+     */
     protected fun subscribe(source: Bone) {
         source.subscribers.add(id)
     }
 
+    /**
+     * Removes subscription to target bone changes.
+     *
+     * @see [subscribe]
+     */
     protected fun unsubscribe(from: Bone) {
         from.subscribers.remove(id)
     }
 
+    /**
+     * Called when any of bones on which current bone is subscribed calls [notifyChange].
+     *
+     * @param bone target bone which state has been changed
+     */
     protected open fun onBoneChanged(bone: Bone) {}
 
 }
