@@ -98,16 +98,12 @@ abstract class Bone(
 
     /**
      * Bone's sibling. Usually is some visual part of application (activity, fragment, view, widget). Created by [Bone.seed] method when bone becomes active.
-     * Tip: bone can be inner class of it's sibling (view for example) so in *seed* we can return *this* instance of view.
      */
     override var sibling: BoneSibling<out Bone>? = null
 
     /**
      * Lambda which creates new instance of bone's sibling.
      * Must be overridden **or** property [persistSibling] must be set to *true* and [sibling] set manually.
-     *
-     * @see [sibling]
-     * @see [persistSibling]
      */
     open val seed: () -> BoneSibling<out Bone> = { throw NotImplementedError("Default seed do nothing: override it or set 'persistSibling = true' and set sibling manually") }
     private var overriddenSeed: (() -> BoneSibling<out Bone>)? = null
@@ -160,6 +156,7 @@ abstract class Bone(
 
     /**
      * Removes bone from descendants. Sets it's *parentBone* to null.
+     *
      * @param bone bone to be removed.
      *
      * @see [parentBone]
