@@ -1,9 +1,12 @@
 package pro.horovodovodo4ka.bones.extensions
 
+import android.support.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneInterface
+import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.NavigationBone
 import pro.horovodovodo4ka.bones.Spine
+import pro.horovodovodo4ka.bones.ui.FragmentSibling
 
 /**
  * Finds closest bone (BoneInterface) in parents.
@@ -21,6 +24,8 @@ inline fun <reified T : BoneInterface> Bone.closest(filter: (T) -> Boolean = { t
 /**
  * Shorthand for finding first Spine and presenting bone on it.
  *
+ * @param bone bone to present
+ *
  * @see [Spine.present]
  */
 fun Bone.present(bone: Bone? = null) {
@@ -29,11 +34,14 @@ fun Bone.present(bone: Bone? = null) {
 
 /**
  * Shorthand for finding first Spine and dismiss bone from it.
+ * If parameter not passed then trying dismiss bone on which this method called
+ *
+ * @param bone bone to dismiss
  *
  * @see [Spine.dismiss]
  */
 fun Bone.dismiss(bone: Bone? = null) {
-    closest<Spine>()?.dismiss(bone)
+    closest<Spine>()?.dismiss(bone ?: this)
 }
 
 /**
@@ -52,4 +60,20 @@ fun Bone.show(bone: Bone) {
  */
 fun Bone.goBack() {
     closest<NavigationBone> { it.goBack() }
+}
+
+/**
+ * @return **false** if processed backPress
+ */
+@CallSuper
+fun Bone.processBackPress(): Boolean {
+    return (sibling as? FragmentSibling<*>)?.processBackPress() ?: true
+}
+
+/**
+ * Force link bone with sibling.
+ */
+inline fun <reified T : Bone> T.glueWith(sibling: BoneSibling<T>) {
+    this.sibling = sibling
+    sibling.bone = this
 }

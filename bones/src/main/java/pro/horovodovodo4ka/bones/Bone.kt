@@ -1,6 +1,5 @@
 package pro.horovodovodo4ka.bones
 
-import android.support.annotation.CallSuper
 import pro.horovodovodo4ka.bones.extensions.uuid
 import java.lang.ref.WeakReference
 
@@ -34,12 +33,10 @@ abstract class Bone(
     }
 
     companion object {
-        private val instances = ArrayList<WeakReference<Bone>>()
+        private val instances = mutableSetOf<WeakReference<Bone>>()
 
         private fun cleanupInstances() {
-            for ((index, instance) in instances.withIndex().reversed()) {
-                if (instance.get() == null) instances.removeAt(index)
-            }
+            instances.retainAll { it.get() != null }
         }
 
         /**
@@ -49,7 +46,7 @@ abstract class Bone(
          */
         operator fun get(key: String): Bone? {
             cleanupInstances()
-            return instances.firstOrNull { it.get()?.id == key }?.get()
+            return instances.find { it.get()?.id == key }?.get()
         }
     }
 
@@ -59,16 +56,6 @@ abstract class Bone(
      * Unique ID used for identifying bones. Used for persisting on configuration changes etc
      */
     val id = String.uuid()
-
-    /**
-     * ID of bone's sibling. Optional property used for binding visual parts (siblings) of bones when recreating view states of bones.
-     * Example: in fragment with custom views which are bone's sibling and can be recreated, we must relink bones of those views back to their parent.
-     * We can identify that views only by unique ID inside parent bone. This is really important to preserve callbacks and links to objects.
-     *
-     * @see [Bone.add]
-     * @see [BoneSibling.link]
-     */
-    open val siblingId: Int = 0
 
     /**
      * Marks bone as active or inactive. On activation bone creates it's sibling. On deactivation unlink it from self.
@@ -111,16 +98,14 @@ abstract class Bone(
 
     /**
      * Bone's sibling. Usually is some visual part of application (activity, fragment, view, widget). Created by [Bone.seed] method when bone becomes active.
-     * Tip: bone can be inner class of it's sibling (view for example) so in *seed* we can return *this* instance of view.
      */
     override var sibling: BoneSibling<out Bone>? = null
 
     /**
      * Lambda which creates new instance of bone's sibling.
-     *
-     * @see [Bone.sibling]
+     * Must be overridden **or** property [persistSibling] must be set to *true* and [sibling] set manually.
      */
-    abstract val seed: () -> BoneSibling<out Bone>
+    open val seed: () -> BoneSibling<out Bone> = { throw NotImplementedError("Default seed do nothing: override it or set 'persistSibling = true' and set sibling manually") }
     private var overriddenSeed: (() -> BoneSibling<out Bone>)? = null
 
     /**
@@ -142,42 +127,41 @@ abstract class Bone(
     /**
      * Adds descendant to this bone hierarchy. Also removes it from previous hierarchy.
      * Sets new bone's *parentBone* to self.
+     * Also checks if bone already exist (using [equals] function). If so then transfers sibling and seed to old bone and replaces bone in sibling to old.
      *
      * @param bone bone been added as descendant.
-     * @param syncBySiblingId if *true* then tries to find descendant with the same *siblingId* and transfer seed from new bone to it instead of adding.
-     *          Used with *inner class* bones which are created by their sibling. Useful for retain links, subscribers etc.
      *
-     * @see [Bone.parentBone]
+     * @see [parentBone]
      */
-    @CallSuper
-    open fun add(bone: Bone, syncBySiblingId: Boolean = false) {
-        if (syncBySiblingId) {
-            descendantsStore
-                .firstOrNull { it.siblingId > 0 && it.siblingId == bone.siblingId }
-                ?.also {
-                    it.overriddenSeed = bone.overriddenSeed ?: bone.seed
-                    it.sibling = bone.sibling
-                    it.syncSibling()
-                    it.notifyChange()
-                    return
+    fun add(bone: Bone) {
+        val oldBone = descendantsStore.find { it == bone }
+        when (oldBone) {
+            null -> {
+                bone.parentBone?.descendantsStore?.remove(bone)
+                descendantsStore.add(bone)
+                bone.parentBone = this
+                if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
+                bone.notifyChange()
+            }
+            else -> {
+                with(oldBone) {
+                    overriddenSeed = bone.overriddenSeed ?: bone.seed
+                    sibling = bone.sibling
+                    syncSibling()
+                    notifyChange()
                 }
+            }
         }
-
-        bone.parentBone?.remove(bone)
-        descendantsStore.add(bone)
-        bone.parentBone = this
-        if (!bone.ignoreAutoActivation || !isActive) bone.isActive = isActive
-        bone.notifyChange()
     }
 
     /**
      * Removes bone from descendants. Sets it's *parentBone* to null.
+     *
      * @param bone bone to be removed.
      *
-     * @see [Bone.parentBone]
+     * @see [parentBone]
      */
-    @CallSuper
-    open fun remove(bone: Bone) {
+    fun remove(bone: Bone) {
         descendantsStore.remove(bone)
         bone.parentBone = null
         bone.notifyChange()
@@ -185,10 +169,49 @@ abstract class Bone(
 
     /**
      * Notifies sibling that something in bone data has been changed.
-     * Also see [BoneSibling.refreshUI]
+     * Also see [BoneSibling.refreshUI].
      */
     fun notifyChange() {
         sibling?.onBoneChanged()
+        notifySubscribers()
     }
+
+    // Callback-less linking
+
+    private val subscribers = mutableSetOf<String>()
+
+    private fun notifySubscribers() {
+        with(subscribers) {
+            retainAll { Bone[it] != null }
+            forEach { Bone[it]?.onBoneChanged(this@Bone) }
+        }
+    }
+
+    /**
+     * Subscribes self to changes of other bone. When target bone is changed it calls [notifyChange] method. This causes call [onBoneChanged] on subscribers.
+     *
+     * @param source target bone
+     */
+    protected fun subscribe(source: Bone) {
+        source.subscribers.add(id)
+    }
+
+    /**
+     * Removes subscription to target bone changes.
+     *
+     * @see [subscribe]
+     */
+    protected fun unsubscribe(from: Bone) {
+        from.subscribers.remove(id)
+    }
+
+    /**
+     * Called when any of bones on which current bone is subscribed calls [notifyChange].
+     *
+     * @param bone target bone which state has been changed
+     */
+    protected open fun onBoneChanged(bone: Bone) {}
+
 }
+
 

@@ -1,7 +1,6 @@
 package pro.horovodovodo4ka.bones.sample.presentation.widget
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +10,22 @@ import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.delegates.Page
+import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
 import java.util.Calendar
 import java.util.Date
 
-class WidgetDialogBone(val initialValue: Date?, private val callback: (Date) -> Unit) : Phalanx() {
+class WidgetDialogBone(value: Date?) : Phalanx() {
     override val seed = { TestDialog() }
 
-    fun setDate(date: Date) {
-        callback(date)
-    }
+    var value: Date? = value
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
 }
 
-class TestDialog : DialogFragment(),
+class TestDialog : BoneDialogFragment<WidgetDialogBone>(),
     FragmentSibling<WidgetDialogBone> by Page(),
     BonePersisterInterface<WidgetDialogBone> {
 
@@ -34,7 +37,7 @@ class TestDialog : DialogFragment(),
 
         val calendar = Calendar.getInstance()
 
-        bone.initialValue?.also { calendar.time = it }
+        bone.value?.also { calendar.time = it }
 
         datePicker.init(
             calendar.get(Calendar.YEAR),
@@ -45,17 +48,21 @@ class TestDialog : DialogFragment(),
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.DAY_OF_MONTH, date)
 
-            bone.setDate(calendar.time)
+            bone.value = calendar.time
         }
     }
 
+    // region BonePersisterInterface
+
     override fun onSaveInstanceState(outState: Bundle) {
         super<BonePersisterInterface>.onSaveInstanceState(outState)
-        super<DialogFragment>.onSaveInstanceState(outState)
+        super<BoneDialogFragment>.onSaveInstanceState(outState)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BonePersisterInterface>.onCreate(savedInstanceState)
-        super<DialogFragment>.onCreate(savedInstanceState)
+        super<BoneDialogFragment>.onCreate(savedInstanceState)
     }
+
+    // endregion
 }

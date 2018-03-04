@@ -43,6 +43,8 @@ abstract class Spine(
      * @param bone new bone
      */
     fun present(bone: Bone) {
+        if (stack.contains(bone)) return
+
         val last = skull
 
         add(bone)
