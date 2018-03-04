@@ -52,6 +52,8 @@ class TestDialog : BoneDialogFragment<WidgetDialogBone>(),
         }
     }
 
+    // region BonePersisterInterface
+
     override fun onSaveInstanceState(outState: Bundle) {
         super<BonePersisterInterface>.onSaveInstanceState(outState)
         super<BoneDialogFragment>.onSaveInstanceState(outState)
@@ -61,4 +63,6 @@ class TestDialog : BoneDialogFragment<WidgetDialogBone>(),
         super<BonePersisterInterface>.onCreate(savedInstanceState)
         super<BoneDialogFragment>.onCreate(savedInstanceState)
     }
+
+    // endregion
 }

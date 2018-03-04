@@ -60,17 +60,19 @@ abstract class Finger(
     /**
      * Adds new bone to the stack and makes it active (if finger is active). Old one becomes inactive.
      *
-     * @param phalanx bone to bee added
+     * @param bone bone to bee added
      */
-    fun push(phalanx: Bone) {
+    fun push(bone: Bone) {
+        if (stack.contains(bone)) return
+
         val last = fingertip
 
-        add(phalanx)
-        stack.add(phalanx)
-        phalanx.isActive = isActive
+        add(bone)
+        stack.add(bone)
+        bone.isActive = isActive
 
         transitionType = PUSHING
-        sibling?.refreshUI(last, phalanx)
+        sibling?.refreshUI(last, bone)
         transitionType = NONE
 
         last?.isActive = false

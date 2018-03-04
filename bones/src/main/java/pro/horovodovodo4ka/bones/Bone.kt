@@ -33,12 +33,10 @@ abstract class Bone(
     }
 
     companion object {
-        private val instances = ArrayList<WeakReference<Bone>>()
+        private val instances = mutableSetOf<WeakReference<Bone>>()
 
         private fun cleanupInstances() {
-            for ((index, instance) in instances.withIndex().reversed()) {
-                if (instance.get() == null) instances.removeAt(index)
-            }
+            instances.retainAll { it.get() != null }
         }
 
         /**
@@ -48,7 +46,7 @@ abstract class Bone(
          */
         operator fun get(key: String): Bone? {
             cleanupInstances()
-            return instances.firstOrNull { it.get()?.id == key }?.get()
+            return instances.find { it.get()?.id == key }?.get()
         }
     }
 
@@ -180,12 +178,16 @@ abstract class Bone(
         sibling?.onBoneChanged()
         notifySubscribers()
     }
+
     // Callback-less linking
+
     private val subscribers = mutableSetOf<String>()
 
     private fun notifySubscribers() {
-        subscribers.retainAll { Bone[it] != null }
-        subscribers.mapNotNull { Bone[it] }.forEach { it.onBoneChanged(this) }
+        with(subscribers) {
+            retainAll { Bone[it] != null }
+            forEach { Bone[it]?.onBoneChanged(this@Bone) }
+        }
     }
 
     protected fun subscribe(source: Bone) {

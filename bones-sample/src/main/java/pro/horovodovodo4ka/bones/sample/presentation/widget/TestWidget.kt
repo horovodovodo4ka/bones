@@ -18,19 +18,31 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class WidgetBone : ViewBone() {
+
     var value: Date? = null
+        set(value) {
+            field = value
+            notifyChange()
+        }
+
+    // prevent multiple dialogs on fast clicks
+    private var dialog: WidgetDialogBone? = null
 
     fun pickDate() {
-        val dlg = WidgetDialogBone(value)
-        subscribe(dlg)
-        present(dlg)
+        dialog = dialog ?: WidgetDialogBone(value)
+            .also {
+                present(it)
+                subscribe(it)
+            }
     }
 
     override fun onBoneChanged(bone: Bone) {
         bone as WidgetDialogBone
         value = bone.value
-        dismiss(bone)
+        bone.dismiss()
         notifyChange()
+
+        dialog = null
     }
 
 }
@@ -50,20 +62,18 @@ class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
+    // just simple accessor
     var value: Date?
         get() = bone.value
         set(value) {
             bone.value = value
-            refreshText()
         }
 
-    private fun refreshText() {
+    private fun refresh() {
         date_label.text = value?.let { formatter.format(it) } ?: "Choose date"
     }
 
-    override fun onBoneChanged() {
-        refreshText()
-    }
+    override fun onBoneChanged() = refresh()
 
     companion object {
         @SuppressLint("SimpleDateFormat")
