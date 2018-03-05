@@ -212,6 +212,30 @@ abstract class Bone(
      */
     protected open fun onBoneChanged(bone: Bone) {}
 
+    // region Helpers and shorthands
+
+    /**
+     * Add multiple bones to self
+     */
+    protected fun add(vararg bones: Bone) {
+        bones.forEach { add(it) }
+    }
+
+    /**
+     * Subscribe on multiple bones.
+     */
+    protected fun subscribe(vararg bones: Bone) {
+        bones.forEach { subscribe(it) }
+    }
+
+    /**
+     * Add multiple bones to self and subscribe on them.
+     */
+    protected fun addAndSubscribe(vararg bones: Bone) {
+        add(*bones)
+        subscribe(*bones)
+    }
+    // endregion
 }
 
 

@@ -40,7 +40,6 @@ class WidgetBone : ViewBone() {
         bone as WidgetDialogBone
         value = bone.value
         bone.dismiss()
-        notifyChange()
 
         dialog = null
     }
