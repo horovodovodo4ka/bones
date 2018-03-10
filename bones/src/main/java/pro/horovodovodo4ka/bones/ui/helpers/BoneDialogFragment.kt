@@ -13,5 +13,4 @@ abstract class BoneDialogFragment<T : Bone> : DialogFragment(), BoneSibling<T> {
 
         bone.dismiss()
     }
-
 }

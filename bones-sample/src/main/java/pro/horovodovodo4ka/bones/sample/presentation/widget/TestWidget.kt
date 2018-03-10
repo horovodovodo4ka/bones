@@ -43,7 +43,6 @@ class WidgetBone : ViewBone() {
 
         dialog = null
     }
-
 }
 
 class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :

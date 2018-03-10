@@ -22,7 +22,6 @@ class WidgetDialogBone(value: Date?) : Phalanx() {
             field = value
             notifyChange()
         }
-
 }
 
 class TestDialog : BoneDialogFragment<WidgetDialogBone>(),

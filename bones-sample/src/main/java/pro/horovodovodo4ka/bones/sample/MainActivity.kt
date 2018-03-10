@@ -107,11 +107,9 @@ class MainActivity : AppCompatActivity(),
                 .beginTransaction()
                 .replace(android.R.id.content, bone.vertebrae.first().sibling as Fragment)
                 .commit()
-
         } else {
             glueWith(bone)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -129,4 +127,3 @@ class MainActivity : AppCompatActivity(),
         }
     }
 }
-
