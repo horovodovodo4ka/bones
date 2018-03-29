@@ -11,8 +11,8 @@ android {
         applicationId 'pro.horovodovodo4ka.bones.sample'
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -37,6 +37,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile project(path: ':bones')
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 }
 
 apply plugin: 'org.jetbrains.dokka-android'

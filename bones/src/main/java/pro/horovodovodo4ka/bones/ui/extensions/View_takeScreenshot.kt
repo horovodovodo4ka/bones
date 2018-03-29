@@ -16,4 +16,3 @@ fun View.takeScreenshot(): Bitmap? {
             draw(Canvas(it))
         }
 }
-

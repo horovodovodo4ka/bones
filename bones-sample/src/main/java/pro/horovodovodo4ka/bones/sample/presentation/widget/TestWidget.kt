@@ -40,11 +40,9 @@ class WidgetBone : ViewBone() {
         bone as WidgetDialogBone
         value = bone.value
         bone.dismiss()
-        notifyChange()
 
         dialog = null
     }
-
 }
 
 class TestWidget @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :

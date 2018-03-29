@@ -17,6 +17,7 @@ import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
 import pro.horovodovodo4ka.bones.statesstore.EmergencyPersister
 import pro.horovodovodo4ka.bones.statesstore.EmergencyPersisterInterface
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
+import pro.horovodovodo4ka.bones.ui.delegates.NavigatorDelayedTransactions
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
 import pro.horovodovodo4ka.bones.ui.helpers.ActivityAppRestartCleaner
 
@@ -83,6 +84,8 @@ class MainActivity : AppCompatActivity(),
         emergencyRemovePin()
 
         bone.dropExitStatus()
+
+        NavigatorDelayedTransactions.executePendingTransactions()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,11 +110,9 @@ class MainActivity : AppCompatActivity(),
                 .beginTransaction()
                 .replace(android.R.id.content, bone.vertebrae.first().sibling as Fragment)
                 .commit()
-
         } else {
             glueWith(bone)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -122,11 +123,11 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         super.onDestroy()
 
-        val storedBone = bone
-        storedBone.sibling = null // remove strong pointer to existing activity instance
-        emergencySave {
-            it.bone = storedBone
+        with(bone) {
+            sibling = null // remove strong pointer to existing activity instance
+            emergencySave {
+                it.bone = this
+            }
         }
     }
 }
-

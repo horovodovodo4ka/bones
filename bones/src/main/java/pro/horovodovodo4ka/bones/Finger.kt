@@ -15,7 +15,8 @@ abstract class Finger(
     /**
      * If passed represents bone used as root
      */
-    rootPhalanx: Bone? = null) : Bone(), NavigationBone {
+    rootPhalanx: Bone? = null
+) : Bone(), NavigationBone {
 
     enum class TransitionType {
         NONE,
@@ -156,7 +157,6 @@ abstract class Finger(
         add(with)
         stack.add(with)
         stack.last().isActive = isActive
-
 
         transitionType = REPLACING
         sibling?.refreshUI(oldBone, with)

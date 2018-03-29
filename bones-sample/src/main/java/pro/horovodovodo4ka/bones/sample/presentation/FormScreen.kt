@@ -18,12 +18,7 @@ import java.text.SimpleDateFormat
 class TestForm : Phalanx() {
     override val seed = { FormScreen() }
 
-    fun addFields(vararg bone: Bone) {
-        bone.forEach {
-            add(it)
-            subscribe(it)
-        }
-    }
+    fun addFields(vararg bones: Bone) = addAndSubscribe(*bones)
 
     override fun onBoneChanged(bone: Bone) = notifyChange()
 }

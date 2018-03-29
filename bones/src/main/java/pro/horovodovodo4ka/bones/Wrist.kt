@@ -14,7 +14,8 @@ abstract class Wrist(
     /**
      * Bones which represents tabs. Can not be modified after construction.
      */
-    vararg finger: Bone) : Bone() {
+    vararg finger: Bone
+) : Bone() {
 
     enum class TransitionType {
         NONE,

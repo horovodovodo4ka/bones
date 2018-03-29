@@ -12,7 +12,8 @@ abstract class Spine(
     /**
      * Represents root bone of spine stack. Required.
      */
-    root: Bone) : Bone(), NavigationBone {
+    root: Bone
+) : Bone(), NavigationBone {
 
     enum class TransitionType {
         NONE,
