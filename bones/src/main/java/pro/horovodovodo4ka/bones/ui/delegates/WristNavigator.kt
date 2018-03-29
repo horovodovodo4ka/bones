@@ -15,39 +15,54 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
  * Delegate that implements default wrist navigation.
  * Uses support library.
  */
-class WristNavigator<T : Wrist>(override val containerId: Int, private val animated: Boolean = false) : WristNavigatorInterface<T> {
+class WristNavigator<T : Wrist>(override val containerId: Int, private val animated: Boolean = false) : WristNavigatorInterface<T>, NavigatorDelayedTransactions {
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        val manager = (managerProvider ?: return)()
+        fun execute(bone: Wrist) {
+            with(bone.sibling as WristNavigatorInterface<*>) {
 
-        val tabFragment = bone.activeBone.sibling as? Fragment ?: return
+                val manager = (this@with.managerProvider ?: return)()
 
-        // make screenshot and place background due android strange behavior with nested fragments
-        if (bone.transitionType != NONE) {
-            manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
+                val tabFragment = bone.activeBone.sibling as? Fragment ?: return
+
+                // make screenshot and place background due android strange behavior with nested fragments
+                if (bone.transitionType != NONE) {
+                    manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
+                }
+
+                manager
+                    .beginTransaction()
+                    .apply {
+                        if (animated) {
+                            when (bone.transitionType) {
+                                INCREMENTING ->
+                                    setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                                DECREMENTING ->
+                                    setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                                else -> Unit
+                            }
+                        }
+                    }
+                    .replace(containerId, tabFragment)
+                    .runOnCommit {
+                        super.refreshUI(from, to)
+                        bone.activeBone.sibling?.refreshUI()
+                    }
+                    .commit()
+            }
         }
 
-        manager
-            .beginTransaction()
-            .apply {
-                if (animated) {
-                    when (bone.transitionType) {
-                        INCREMENTING ->
-                            setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
-                        DECREMENTING ->
-                            setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
-                        else -> Unit
-                    }
-                }
+        val manager = (managerProvider ?: return)()
+
+        if (manager.isStateSaved) {
+            post {
+                execute(bone)
             }
-            .replace(containerId, tabFragment)
-            .runOnCommit {
-                super.refreshUI(from, to)
-                bone.activeBone.sibling?.refreshUI()
-            }
-            .commit()
+        } else {
+            execute(bone)
+        }
     }
 }

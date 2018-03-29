@@ -16,7 +16,7 @@ import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
  * Delegate that implements default Spine navigation.
  * Uses support library.
  */
-class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
+class SpineNavigator<T : Spine> : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
     override val containerId: Int = android.R.id.content
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
@@ -24,37 +24,54 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T> {
     override fun refreshUI(from: Bone?, to: Bone?) {
         super.refreshUI(from, to)
 
-        val manager = (managerProvider ?: return)()
-        if (manager.isStateSaved) return
+        fun execute(bone: Spine, transaction: Any) {
+            with(bone.sibling as SpineNavigatorInterface<*>) {
+                val manager = (this@with.managerProvider ?: return)()
 
-        val fromFragment = from?.sibling as? Fragment
-        val toFragment = to?.sibling as? Fragment
+                val fromFragment = from?.sibling as? Fragment
+                val toFragment = to?.sibling as? Fragment
 
-        when (bone.transitionType) {
-            PRESENTING -> {
-                manager
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .also {
-                        when (toFragment) {
-                            is BoneDialogFragment<*> -> it.add(toFragment, null)
-                            is DialogFragment -> it.add(containerId, toFragment)
-                                .also {
-                                    Log.w("Bones", "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead.")
+                when (transaction) {
+                    PRESENTING -> {
+                        manager
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .also {
+                                when (toFragment) {
+                                    is BoneDialogFragment<*> -> it.add(toFragment, null)
+                                    is DialogFragment -> it.add(containerId, toFragment)
+                                        .also {
+                                            Log.w(
+                                                "Bones",
+                                                "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead."
+                                            )
+                                        }
+                                    else -> it.add(containerId, toFragment)
                                 }
-                            else -> it.add(containerId, toFragment)
-                        }
+                            }
+                            .commit()
                     }
-                    .commit()
+                    DISMISSING -> {
+                        manager
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                            .remove(fromFragment as Fragment)
+                            .commit()
+                    }
+                    else -> Unit
+                }
             }
-            DISMISSING -> {
-                manager
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .remove(fromFragment as Fragment)
-                    .commit()
+        }
+
+        val manager = (managerProvider ?: return)()
+        val transaction = bone.transitionType
+
+        if (manager.isStateSaved) {
+            post {
+                execute(bone, transaction)
             }
-            else -> Unit
+        } else {
+            execute(bone, transaction)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
+import pro.horovodovodo4ka.bones.Finger.TransitionType
 import pro.horovodovodo4ka.bones.Finger.TransitionType.NONE
 import pro.horovodovodo4ka.bones.Finger.TransitionType.POPPING
 import pro.horovodovodo4ka.bones.Finger.TransitionType.PUSHING
@@ -18,38 +19,53 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
  * Uses support library.
  * Also support some specific cases such using [DialogFragment]
  */
-class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigatorInterface<T> {
+class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigatorInterface<T>, NavigatorDelayedTransactions {
 
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
     override fun refreshUI(from: Bone?, to: Bone?) {
 
-        val manager = (managerProvider ?: return)()
-        if (manager.isStateSaved) return
+        fun execute(bone: Finger, transaction: TransitionType) {
 
-        val fragment = bone.fingertip?.sibling as? Fragment ?: return
+            with(bone.sibling as FingerNavigatorInterface<*>) {
 
-        val transition = when (bone.transitionType) {
-            PUSHING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-            POPPING -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-            REPLACING -> FragmentTransaction.TRANSIT_FRAGMENT_FADE
-            else -> FragmentTransaction.TRANSIT_NONE
-        }
+                val manager = (this@with.managerProvider ?: return)()
 
-        // make screenshot and place background due android strange behavior with nested fragments
-        if (bone.transitionType != NONE) {
-            manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
-        }
+                val fragment = bone.fingertip?.sibling as? Fragment ?: return
 
-        manager
-            .beginTransaction()
-            .setTransition(transition)
-            .replace(containerId, fragment)
-            .runOnCommit {
-                super.refreshUI(from, to)
-                bone.fingertip?.sibling?.refreshUI()
+                val transition = when (transaction) {
+                    PUSHING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    POPPING -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
+                    REPLACING -> FragmentTransaction.TRANSIT_FRAGMENT_FADE
+                    else -> FragmentTransaction.TRANSIT_NONE
+                }
+
+                // make screenshot and place background due android strange behavior with nested fragments
+                if (bone.transitionType != NONE) {
+                    manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
+                }
+
+                manager
+                    .beginTransaction()
+                    .setTransition(transition)
+                    .replace(containerId, fragment)
+                    .runOnCommit {
+                        super.refreshUI(from, to)
+                        bone.fingertip?.sibling?.refreshUI()
+                    }
+                    .commit()
             }
-            .commit()
+        }
+
+        val manager = (managerProvider ?: return)()
+        val transaction = bone.transitionType
+        if (manager.isStateSaved) {
+            post {
+                execute(bone, transaction)
+            }
+        } else {
+            execute(bone, transaction)
+        }
     }
 }
