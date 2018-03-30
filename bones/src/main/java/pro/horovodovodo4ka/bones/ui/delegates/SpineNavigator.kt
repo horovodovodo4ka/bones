@@ -24,12 +24,15 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T>, NavigatorDelayedTr
     override fun refreshUI(from: Bone?, to: Bone?) {
         super.refreshUI(from, to)
 
+        val fromFragment = from?.sibling as? Fragment
+        val toFragment = to?.sibling as? Fragment
+
         fun execute(bone: Spine, transaction: Any) {
             with(bone.sibling as SpineNavigatorInterface<*>) {
                 val manager = (this@with.managerProvider ?: return)()
 
-                val fromFragment = from?.sibling as? Fragment
-                val toFragment = to?.sibling as? Fragment
+                // 1) after restoring from state new sibling bound even if bone removed it's sibling, 2) if null then no restart happen and use old sibling
+                val realFromFragment = from?.sibling as? Fragment ?: fromFragment
 
                 when (transaction) {
                     PRESENTING -> {
@@ -55,7 +58,7 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T>, NavigatorDelayedTr
                         manager
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                            .remove(fromFragment as Fragment)
+                            .remove(realFromFragment)
                             .commit()
                     }
                     else -> Unit
