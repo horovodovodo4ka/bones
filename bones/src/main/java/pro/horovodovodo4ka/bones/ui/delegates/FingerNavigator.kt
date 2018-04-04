@@ -37,7 +37,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                 val transition = when (transaction) {
                     PUSHING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
                     POPPING -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-                    REPLACING -> FragmentTransaction.TRANSIT_FRAGMENT_FADE
+                    REPLACING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
                     else -> FragmentTransaction.TRANSIT_NONE
                 }
 
