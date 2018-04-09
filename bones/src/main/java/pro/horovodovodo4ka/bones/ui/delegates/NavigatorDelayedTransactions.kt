@@ -14,6 +14,6 @@ interface NavigatorDelayedTransactions {
 }
 
 fun NavigatorDelayedTransactions.post(block: () -> Unit) {
-    Log.w("Bones", "Delayed transaction detected. Be careful using this feature! Multiple transactions can cause glitches and fluent bugs.")
+    Log.d("Bones", "Delayed transaction detected. Be careful using this feature! Multiple transactions can cause glitches and fluent bugs.")
     handlers.add(block)
 }

@@ -16,8 +16,8 @@ import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
  * Delegate that implements default Spine navigation.
  * Uses support library.
  */
-class SpineNavigator<T : Spine> : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
-    override val containerId: Int = android.R.id.content
+class SpineNavigator<T : Spine>(containerId: Int = android.R.id.content) : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
+    override val containerId: Int = containerId
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
@@ -61,7 +61,14 @@ class SpineNavigator<T : Spine> : SpineNavigatorInterface<T>, NavigatorDelayedTr
                             .remove(realFromFragment)
                             .commit()
                     }
-                    else -> Unit
+                    else -> {
+                        manager.fragments.forEach {
+                            manager.beginTransaction().remove(it).commitNow()
+                        }
+                        bone.vertebrae.forEach {
+                            manager.beginTransaction().add(containerId, it.sibling as Fragment).commitNow()
+                        }
+                    }
                 }
             }
         }

@@ -38,10 +38,8 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                     .apply {
                         if (animated) {
                             when (bone.transitionType) {
-                                INCREMENTING ->
-                                    setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
-                                DECREMENTING ->
-                                    setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                                INCREMENTING -> setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                                DECREMENTING -> setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
                                 else -> Unit
                             }
                         }

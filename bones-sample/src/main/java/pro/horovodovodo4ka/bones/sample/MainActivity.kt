@@ -1,7 +1,6 @@
 package pro.horovodovodo4ka.bones.sample
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import pro.horovodovodo4ka.bones.Bone
@@ -106,10 +105,7 @@ class MainActivity : AppCompatActivity(),
             glueWith(bone)
             bone.isActive = true
 
-            supportFragmentManager
-                .beginTransaction()
-                .replace(android.R.id.content, bone.vertebrae.first().sibling as Fragment)
-                .commit()
+            refreshUI()
         } else {
             glueWith(bone)
         }
