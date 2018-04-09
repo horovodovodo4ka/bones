@@ -16,6 +16,7 @@ fun TabLayout.sync(state: TabState) {
         override fun onTabSelected(tab: Tab) {
             state.tab = tab.position
         }
+
         override fun onTabUnselected(tab: Tab) {}
         override fun onTabReselected(tab: Tab) {}
     })
