@@ -15,7 +15,7 @@ interface BoneSibling<T : Bone> {
      * Called by bone on different state changes that requires updating of UI
      */
     @CallSuper
-    fun refreshUI(from: Bone? = null, to: Bone? = null) {
+    fun refreshUI() {
         bone.sibling?.onRefresh()
     }
 

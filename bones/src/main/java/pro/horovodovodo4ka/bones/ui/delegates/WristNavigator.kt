@@ -2,12 +2,11 @@ package pro.horovodovodo4ka.bones.ui.delegates
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.R
 import pro.horovodovodo4ka.bones.Wrist
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.DECREMENTING
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.INCREMENTING
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.NONE
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.Decrementing
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.Incrementing
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.None
 import pro.horovodovodo4ka.bones.ui.WristNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
@@ -19,7 +18,7 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
-    override fun refreshUI(from: Bone?, to: Bone?) {
+    override fun refreshUI() {
 
         fun execute(bone: Wrist) {
             with(bone.sibling as WristNavigatorInterface<*>) {
@@ -29,7 +28,7 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                 val tabFragment = bone.activeBone.sibling as? Fragment ?: return
 
                 // make screenshot and place background due android strange behavior with nested fragments
-                if (bone.transitionType != NONE) {
+                if (bone.transitionType != None) {
                     manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
                 }
 
@@ -38,15 +37,15 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                     .apply {
                         if (animated) {
                             when (bone.transitionType) {
-                                INCREMENTING -> setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
-                                DECREMENTING -> setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                                is Incrementing -> setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                                is Decrementing -> setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
                                 else -> Unit
                             }
                         }
                     }
                     .replace(containerId, tabFragment)
                     .runOnCommit {
-                        super.refreshUI(from, to)
+                        super.refreshUI()
                         bone.activeBone.sibling?.refreshUI()
                     }
                     .commit()

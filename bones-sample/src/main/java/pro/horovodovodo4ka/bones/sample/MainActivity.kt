@@ -39,9 +39,9 @@ class RootBone(root: Bone) :
         canExit = false
     }
 
-    override fun fingerSwitched(from: Int, to: Int) = dropExitStatus()
-    override fun phalanxSwitched(from: Bone, to: Bone?, type: Finger.TransitionType) = dropExitStatus()
-    override fun boneSwitched(from: Bone, to: Bone, type: Spine.TransitionType) = dropExitStatus()
+    override fun fingerSwitched(transition: Wrist.TransitionType) = dropExitStatus()
+    override fun phalanxSwitched(transition: Finger.TransitionType) = dropExitStatus()
+    override fun boneSwitched(transition: Spine.TransitionType) = dropExitStatus()
 
     fun processBack(preExitCallback: () -> Unit): Boolean {
         if (processBackPress()) {

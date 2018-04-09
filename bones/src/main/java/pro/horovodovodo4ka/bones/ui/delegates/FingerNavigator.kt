@@ -4,13 +4,12 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
-import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Finger.TransitionType
-import pro.horovodovodo4ka.bones.Finger.TransitionType.NONE
-import pro.horovodovodo4ka.bones.Finger.TransitionType.POPPING
-import pro.horovodovodo4ka.bones.Finger.TransitionType.PUSHING
-import pro.horovodovodo4ka.bones.Finger.TransitionType.REPLACING
+import pro.horovodovodo4ka.bones.Finger.TransitionType.None
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Popping
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Pushing
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Replacing
 import pro.horovodovodo4ka.bones.ui.FingerNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
@@ -24,7 +23,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
-    override fun refreshUI(from: Bone?, to: Bone?) {
+    override fun refreshUI() {
 
         fun execute(bone: Finger, transaction: TransitionType) {
 
@@ -35,14 +34,14 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                 val fragment = bone.fingertip?.sibling as? Fragment ?: return
 
                 val transition = when (transaction) {
-                    PUSHING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-                    POPPING -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-                    REPLACING -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    is Pushing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    is Popping -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
+                    is Replacing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
                     else -> FragmentTransaction.TRANSIT_NONE
                 }
 
                 // make screenshot and place background due android strange behavior with nested fragments
-                if (bone.transitionType != NONE) {
+                if (bone.transitionType != None) {
                     manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
                 }
 
@@ -51,7 +50,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                     .setTransition(transition)
                     .replace(containerId, fragment)
                     .runOnCommit {
-                        super.refreshUI(from, to)
+                        super.refreshUI()
                         bone.fingertip?.sibling?.refreshUI()
                     }
                     .commit()
