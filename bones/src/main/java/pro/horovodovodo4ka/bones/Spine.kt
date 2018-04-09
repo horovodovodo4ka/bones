@@ -1,8 +1,8 @@
 package pro.horovodovodo4ka.bones
 
-import pro.horovodovodo4ka.bones.Spine.TransitionType.DISMISSING
-import pro.horovodovodo4ka.bones.Spine.TransitionType.NONE
-import pro.horovodovodo4ka.bones.Spine.TransitionType.PRESENTING
+import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
+import pro.horovodovodo4ka.bones.Spine.TransitionType.None
+import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
 
 /**
  * Represents mechanic of modal screens. Provides methods for presenting and dismissing.
@@ -15,16 +15,16 @@ abstract class Spine(
     root: Bone
 ) : Bone(), NavigationBone {
 
-    enum class TransitionType {
-        NONE,
-        PRESENTING,
-        DISMISSING;
+    sealed class TransitionType {
+        object None : TransitionType()
+        data class Presenting(val from: Bone?, val to: Bone?) : TransitionType()
+        data class Dismissing(val from: Bone?, val to: Bone?) : TransitionType()
     }
 
     /**
      * Used to determine which type of changes is going now on stack.
      */
-    var transitionType = NONE
+    var transitionType: TransitionType = None
         private set
 
     private val stack = ArrayList<Bone>(listOf(root)).also { add(root) }
@@ -52,11 +52,11 @@ abstract class Spine(
         stack.add(bone)
         bone.isActive = isActive
 
-        transitionType = PRESENTING
-        sibling?.refreshUI(last, skull)
-        transitionType = NONE
+        transitionType = Presenting(last, skull)
+        sibling?.refreshUI()
+        transitionType = None
 
-        listeners.forEach { it.boneSwitched(last, skull, PRESENTING) }
+        listeners.forEach { it.boneSwitched(Presenting(last, skull)) }
     }
 
     /**
@@ -76,16 +76,16 @@ abstract class Spine(
         stack.addAll(reserved)
         stack.last().isActive = isActive
 
-        transitionType = DISMISSING
-        sibling?.refreshUI(target, skull)
-        transitionType = NONE
+        transitionType = Dismissing(target, skull)
+        sibling?.refreshUI()
+        transitionType = None
 
         removed.forEach {
             it.isActive = false
             remove(it)
         }
 
-        listeners.forEach { it.boneSwitched(target, skull, DISMISSING) }
+        listeners.forEach { it.boneSwitched(Dismissing(target, skull)) }
     }
 
     /**
@@ -111,7 +111,7 @@ abstract class Spine(
      * Used to notify parent bones about spine navigation actions.
      */
     interface Listener {
-        fun boneSwitched(from: Bone, to: Bone, type: TransitionType)
+        fun boneSwitched(transition: TransitionType)
     }
 
     private val listeners: List<Listener>

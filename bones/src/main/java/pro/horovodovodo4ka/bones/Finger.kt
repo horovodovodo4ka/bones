@@ -1,9 +1,9 @@
 package pro.horovodovodo4ka.bones
 
-import pro.horovodovodo4ka.bones.Finger.TransitionType.NONE
-import pro.horovodovodo4ka.bones.Finger.TransitionType.POPPING
-import pro.horovodovodo4ka.bones.Finger.TransitionType.PUSHING
-import pro.horovodovodo4ka.bones.Finger.TransitionType.REPLACING
+import pro.horovodovodo4ka.bones.Finger.TransitionType.None
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Popping
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Pushing
+import pro.horovodovodo4ka.bones.Finger.TransitionType.Replacing
 
 /**
  * Represent navigation concept called **stack**. It means that this bone have stack of bones topmost of which is active when this bone is active.
@@ -18,17 +18,17 @@ abstract class Finger(
     rootPhalanx: Bone? = null
 ) : Bone(), NavigationBone {
 
-    enum class TransitionType {
-        NONE,
-        POPPING,
-        PUSHING,
-        REPLACING;
+    sealed class TransitionType {
+        object None : TransitionType()
+        data class Pushing(val from: Bone?, val to: Bone?) : TransitionType()
+        data class Popping(val from: Bone?, val to: Bone?) : TransitionType()
+        data class Replacing(val from: Bone?, val to: Bone?) : TransitionType()
     }
 
     /**
      * Used to determine which type of changes is going now on stack.
      */
-    var transitionType = NONE
+    var transitionType: TransitionType = None
         private set
 
     private val stack = ArrayList<Bone>()
@@ -72,13 +72,13 @@ abstract class Finger(
         stack.add(bone)
         bone.isActive = isActive
 
-        transitionType = PUSHING
-        sibling?.refreshUI(last, bone)
-        transitionType = NONE
+        transitionType = Pushing(last, fingertip)
+        sibling?.refreshUI()
 
         last?.isActive = false
 
-        listeners.forEach { it.phalanxSwitched(stack[stack.lastIndex - 1], fingertip, PUSHING) }
+        listeners.forEach { it.phalanxSwitched(transitionType) }
+        transitionType = None
     }
 
     /**
@@ -120,16 +120,16 @@ abstract class Finger(
         stack.addAll(reserved)
         stack.last().isActive = isActive
 
-        transitionType = POPPING
-        sibling?.refreshUI(oldBone, phalanx)
-        transitionType = NONE
+        transitionType = Popping(oldBone, phalanx)
+        sibling?.refreshUI()
 
         removed.forEach {
             it.isActive = false
             remove(it)
         }
 
-        listeners.forEach { it.phalanxSwitched(oldBone, phalanx, POPPING) }
+        listeners.forEach { it.phalanxSwitched(transitionType) }
+        transitionType = None
     }
 
     /**
@@ -158,16 +158,16 @@ abstract class Finger(
         stack.add(with)
         stack.last().isActive = isActive
 
-        transitionType = REPLACING
-        sibling?.refreshUI(oldBone, with)
-        transitionType = NONE
+        transitionType = Replacing(oldBone, with)
+        sibling?.refreshUI()
 
         removed.forEach {
             it.isActive = false
             remove(it)
         }
 
-        listeners.forEach { it.phalanxSwitched(oldBone, with, REPLACING) }
+        listeners.forEach { it.phalanxSwitched(transitionType) }
+        transitionType = None
     }
 
     /**
@@ -193,7 +193,7 @@ abstract class Finger(
      * Used to notify parent bones about finger stack changes.
      */
     interface Listener {
-        fun phalanxSwitched(from: Bone, to: Bone?, type: TransitionType)
+        fun phalanxSwitched(transition: TransitionType)
     }
 
     private val listeners: List<Listener>

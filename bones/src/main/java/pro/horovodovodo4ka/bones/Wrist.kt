@@ -1,8 +1,8 @@
 package pro.horovodovodo4ka.bones
 
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.DECREMENTING
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.INCREMENTING
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.NONE
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.Decrementing
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.Incrementing
+import pro.horovodovodo4ka.bones.Wrist.TransitionType.None
 
 /**
  * Represents navigation concept called **tabs**. It means that bone have children bones called **fingers**.
@@ -17,16 +17,16 @@ abstract class Wrist(
     vararg finger: Bone
 ) : Bone() {
 
-    enum class TransitionType {
-        NONE,
-        INCREMENTING,
-        DECREMENTING;
+    sealed class TransitionType {
+        object None : TransitionType()
+        data class Incrementing(val from: Bone?, val to: Bone?) : TransitionType()
+        data class Decrementing(val from: Bone?, val to: Bone?) : TransitionType()
     }
 
     /**
      * Used to determine which type of changes is going now on stack.
      */
-    var transitionType = NONE
+    var transitionType: TransitionType = None
         private set
 
     /**
@@ -48,16 +48,17 @@ abstract class Wrist(
             if (field == value) return
 
             val oldIndex = activeBoneIndex
+            val oldBone = activeBone
 
             activeBone.isActive = false
             field = value
             activeBone.isActive = isActive
 
-            transitionType = if (oldIndex > value) DECREMENTING else INCREMENTING
-            sibling?.refreshUI(fingers[oldIndex], fingers[value])
-            transitionType = NONE
+            transitionType = if (oldIndex > value) Decrementing(oldBone, activeBone) else Incrementing(oldBone, activeBone)
+            sibling?.refreshUI()
 
-            listeners.forEach { it.fingerSwitched(oldIndex, field) }
+            listeners.forEach { it.fingerSwitched(transitionType) }
+            transitionType = None
         }
 
     /**
@@ -94,7 +95,7 @@ abstract class Wrist(
      * Used to notify parent bones about active tab changes.
      */
     interface Listener {
-        fun fingerSwitched(from: Int, to: Int)
+        fun fingerSwitched(transition: TransitionType)
     }
 
     private val listeners: List<Listener>
