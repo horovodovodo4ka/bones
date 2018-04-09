@@ -48,7 +48,7 @@ abstract class Finger(
 
     /**
      * Topmost bone of the stack.
-    */
+     */
     val fingertip: Bone?
         get() = stack.lastOrNull()
 
