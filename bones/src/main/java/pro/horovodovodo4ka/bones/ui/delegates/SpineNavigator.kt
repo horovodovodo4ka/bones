@@ -15,8 +15,7 @@ import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
  * Delegate that implements default Spine navigation.
  * Uses support library.
  */
-class SpineNavigator<T : Spine>(containerId: Int = android.R.id.content) : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
-    override val containerId: Int = containerId
+class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.content) : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
 
@@ -31,7 +30,6 @@ class SpineNavigator<T : Spine>(containerId: Int = android.R.id.content) : Spine
 
                 when (transaction) {
                     is Dismissing -> {
-
                         // 1) after restoring from state new sibling bound even if bone removed it's sibling, 2) if null then no restart happen and use old sibling
                         val realFromFragment = transaction.from?.sibling as? Fragment ?: fromFragment
 
@@ -42,33 +40,23 @@ class SpineNavigator<T : Spine>(containerId: Int = android.R.id.content) : Spine
                             .commit()
                     }
                     is Presenting -> {
-
                         val toRealFragment = transaction.to?.sibling as? Fragment
 
                         manager
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .also {
-                                when (toRealFragment) {
-                                    is BoneDialogFragment<*> -> it.add(toRealFragment, null)
-                                    is DialogFragment -> it.add(containerId, toRealFragment)
-                                        .also {
-                                            Log.w(
-                                                "Bones",
-                                                "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead."
-                                            )
-                                        }
-                                    else -> it.add(containerId, toRealFragment)
-                                }
-                            }
+                            .add(fragment = toRealFragment, to = containerId)
                             .commit()
                     }
                     else -> {
                         manager.fragments.forEach {
                             manager.beginTransaction().remove(it).commitNow()
                         }
-                        bone.vertebrae.forEach {
-                            manager.beginTransaction().add(containerId, it.sibling as Fragment).commitNow()
+                        bone.vertebrae.forEach { bone ->
+                            manager
+                                .beginTransaction()
+                                .add(fragment = bone.sibling as Fragment, to = containerId)
+                                .commitNow()
                         }
                     }
                 }
@@ -86,4 +74,19 @@ class SpineNavigator<T : Spine>(containerId: Int = android.R.id.content) : Spine
             execute(bone, transaction)
         }
     }
+}
+
+private fun FragmentTransaction.add(fragment: Fragment?, to: Int) : FragmentTransaction {
+    when (fragment) {
+        is BoneDialogFragment<*> -> add(fragment, null)
+        is DialogFragment -> add(to, fragment)
+            .also {
+                Log.w(
+                    "Bones",
+                    "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead."
+                )
+            }
+        else -> add(to, fragment)
+    }
+    return this
 }
