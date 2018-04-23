@@ -1,12 +1,12 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
 import android.content.DialogInterface
-import android.support.v4.app.DialogFragment
+import android.support.v7.app.AppCompatDialogFragment
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.dismiss
 
-abstract class BoneDialogFragment<T : Bone> : DialogFragment(), BoneSibling<T> {
+abstract class BoneAppCompatDialogFragment<T : Bone> : AppCompatDialogFragment(), BoneSibling<T> {
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
