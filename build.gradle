@@ -3,8 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.2.40'
 
-    ext.VERSION = "0.8.1"
-    ext.BUILD = 12
+    ext.VERSION = "0.8.2"
+    ext.BUILD = 13
 
     repositories {
         google()
