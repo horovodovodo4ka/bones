@@ -9,6 +9,8 @@ import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
+import pro.horovodovodo4ka.bones.ui.helpers.BoneAppCompatDialogFragment
+import pro.horovodovodo4ka.bones.ui.helpers.BoneBottomSheetDialogFragment
 import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
 
 /**
@@ -78,12 +80,14 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
 
 private fun FragmentTransaction.add(fragment: Fragment?, to: Int) : FragmentTransaction {
     when (fragment) {
-        is BoneDialogFragment<*> -> add(fragment, null)
+        is BoneDialogFragment<*> -> add(fragment, fragment.tag)
+        is BoneAppCompatDialogFragment<*> -> add(fragment, fragment.tag)
+        is BoneBottomSheetDialogFragment<*> -> add(fragment, fragment.tag)
         is DialogFragment -> add(to, fragment)
             .also {
                 Log.w(
                     "Bones",
-                    "Using of DialogFragment is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead."
+                    "Using of DialogFragment (or it's descendant) is not recommended because it doesn't handle cancelling as dismiss. Use BoneDialogFragment instead."
                 )
             }
         else -> add(to, fragment)
