@@ -4,7 +4,7 @@
 ```
 MIT License
 
-Copyright (c) 2018 Anna Sidorova (@horobvodovodo4ka)
+Copyright (c) 2018 Anna Sidorova (@horovodovodo4ka)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
