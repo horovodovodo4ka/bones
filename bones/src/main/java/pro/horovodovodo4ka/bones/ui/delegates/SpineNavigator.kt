@@ -20,6 +20,7 @@ import pro.horovodovodo4ka.bones.ui.helpers.BoneDialogFragment
 class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.content) : SpineNavigatorInterface<T>, NavigatorDelayedTransactions {
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
+    override var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)? = null
 
     override fun refreshUI() {
         super.refreshUI()
@@ -47,6 +48,11 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                         manager
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .apply {
+                                toRealFragment?.also {
+                                    transactionSetup?.invoke(this, it)
+                                }
+                            }
                             .add(fragment = toRealFragment, to = containerId)
                             .commit()
                     }
