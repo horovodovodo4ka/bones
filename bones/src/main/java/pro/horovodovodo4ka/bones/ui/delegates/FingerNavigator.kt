@@ -22,6 +22,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
 
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
+    override var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)? = null
 
     override fun refreshUI() {
 
@@ -48,6 +49,9 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                 manager
                     .beginTransaction()
                     .setTransition(transition)
+                    .apply {
+                        transactionSetup?.invoke(this, fragment)
+                    }
                     .replace(containerId, fragment)
                     .runOnCommit {
                         super.refreshUI()

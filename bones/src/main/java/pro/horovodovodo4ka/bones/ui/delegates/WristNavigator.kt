@@ -2,6 +2,7 @@ package pro.horovodovodo4ka.bones.ui.delegates
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.R
 import pro.horovodovodo4ka.bones.Wrist
 import pro.horovodovodo4ka.bones.Wrist.TransitionType.Decrementing
@@ -17,6 +18,7 @@ import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 class WristNavigator<T : Wrist>(override val containerId: Int, private val animated: Boolean = false) : WristNavigatorInterface<T>, NavigatorDelayedTransactions {
     override lateinit var bone: T
     override var managerProvider: (() -> FragmentManager)? = null
+    override var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)? = null
 
     override fun refreshUI() {
 
@@ -36,7 +38,7 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                     .beginTransaction()
                     .apply {
                         if (animated) {
-                            when (bone.transitionType) {
+                            transactionSetup?.invoke(this, tabFragment) ?: when (bone.transitionType) {
                                 is Incrementing -> setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
                                 is Decrementing -> setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
                                 else -> Unit

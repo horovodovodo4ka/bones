@@ -1,6 +1,8 @@
 package pro.horovodovodo4ka.bones.ui
 
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
@@ -25,4 +27,9 @@ interface ContainerFragmentSibling<T : Bone> : FragmentSibling<T> {
      * Primarily used by navigation delegates eg [SpineNavigator], [WristNavigator], [FingerNavigator]
      */
     var managerProvider: (() -> FragmentManager)?
+
+    /**
+     * Lambda called for additional transaction setup
+     */
+    var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)?
 }
