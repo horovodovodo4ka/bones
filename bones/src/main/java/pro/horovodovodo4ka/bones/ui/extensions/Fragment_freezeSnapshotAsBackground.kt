@@ -2,7 +2,7 @@ package pro.horovodovodo4ka.bones.ui.extensions
 
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 /**
  * Utility helper to capture screenshot of fragment view and placing it as background.

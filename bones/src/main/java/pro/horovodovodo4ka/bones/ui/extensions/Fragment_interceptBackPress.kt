@@ -1,6 +1,6 @@
 package pro.horovodovodo4ka.bones.ui.extensions
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 /**
  * Utility function to add custom behavior on back press for dialog

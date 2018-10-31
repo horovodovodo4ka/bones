@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
 import android.content.DialogInterface
-import android.support.design.widget.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.dismiss

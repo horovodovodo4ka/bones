@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.persistance
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneSibling
 
