@@ -1,6 +1,6 @@
 package pro.horovodovodo4ka.bones.extensions
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneInterface
 import pro.horovodovodo4ka.bones.BoneSibling

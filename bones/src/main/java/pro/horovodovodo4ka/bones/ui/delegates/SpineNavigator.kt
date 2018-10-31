@@ -1,9 +1,9 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import android.util.Log
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
@@ -34,7 +34,8 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                 when (transaction) {
                     is Dismissing -> {
                         // 1) after restoring from state new sibling bound even if bone removed it's sibling, 2) if null then no restart happen and use old sibling
-                        val realFromFragment = transaction.from?.sibling as? Fragment ?: fromFragment
+                        val realFromFragment = transaction.from?.sibling as? Fragment
+                            ?: fromFragment ?: return
 
                         manager
                             .beginTransaction()
@@ -43,15 +44,13 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                             .commit()
                     }
                     is Presenting -> {
-                        val toRealFragment = transaction.to?.sibling as? Fragment
+                        val toRealFragment = transaction.to?.sibling as? Fragment ?: return
 
                         manager
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .apply {
-                                toRealFragment?.also {
-                                    transactionSetup?.invoke(this, it)
-                                }
+                                transactionSetup?.invoke(this, toRealFragment)
                             }
                             .add(fragment = toRealFragment, to = containerId)
                             .commit()
@@ -84,7 +83,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
     }
 }
 
-private fun FragmentTransaction.add(fragment: Fragment?, to: Int) : FragmentTransaction {
+private fun FragmentTransaction.add(fragment: Fragment, to: Int) : FragmentTransaction {
     when (fragment) {
         is BoneDialogFragment<*> -> add(fragment, fragment.tag)
         is BoneAppCompatDialogFragment<*> -> add(fragment, fragment.tag)

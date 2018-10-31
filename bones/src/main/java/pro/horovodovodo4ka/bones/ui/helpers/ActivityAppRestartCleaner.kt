@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 
 /**
  * Simple interface which destroy all fragments loaded from bundle.

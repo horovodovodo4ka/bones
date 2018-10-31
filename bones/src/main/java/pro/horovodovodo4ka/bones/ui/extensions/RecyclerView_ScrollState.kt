@@ -1,9 +1,9 @@
 package pro.horovodovodo4ka.bones.ui.extensions
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.OnScrollListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 
 data class RecyclerState(var position: Int = 0)
 
@@ -17,7 +17,7 @@ fun RecyclerView.syncLinear(context: Context?, scrollState: RecyclerState): Line
     manager.scrollToPosition(scrollState.position)
 
     addOnScrollListener(object : OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             scrollState.position = manager.findFirstVisibleItemPosition()
         }
     })

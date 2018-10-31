@@ -1,7 +1,7 @@
 package pro.horovodovodo4ka.bones.ui.extensions
 
-import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.Toolbar
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.goBack
 

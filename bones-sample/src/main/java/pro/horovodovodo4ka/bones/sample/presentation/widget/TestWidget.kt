@@ -2,7 +2,7 @@ package pro.horovodovodo4ka.bones.sample.presentation.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.view_test_widget.view.*

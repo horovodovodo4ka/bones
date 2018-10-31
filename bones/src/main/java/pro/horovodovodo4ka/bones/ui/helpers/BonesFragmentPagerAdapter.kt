@@ -1,8 +1,8 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import pro.horovodovodo4ka.bones.Bone
 
@@ -17,7 +17,8 @@ class BonesFragmentPagerAdapter(private val fm: FragmentManager, private val tab
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         super.destroyItem(container, position, `object`)
-        fm.beginTransaction()?.remove(tabs[position].second.sibling as? Fragment)?.commitNow()
+        val fragment = tabs[position].second.sibling as? Fragment ?: return
+        fm.beginTransaction().remove(fragment).commitNow()
         tabs[position].second.isActive = false
     }
 }

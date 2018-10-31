@@ -1,6 +1,6 @@
 package pro.horovodovodo4ka.bones
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 /**
  * Base interface representing bone sibling.
