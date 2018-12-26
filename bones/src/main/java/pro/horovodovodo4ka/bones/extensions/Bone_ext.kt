@@ -9,11 +9,11 @@ import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.ui.FragmentSibling
 
 /**
- * Finds closest bone (BoneInterface) in parents.
+ * Finds closest bone of specified type in parents.
  *
  * @param filter optional filter if we need more specific selection either than just taking first bone.
  */
-inline fun <reified T : BoneInterface> Bone.closest(filter: (T) -> Boolean = { true }): T? {
+inline fun <reified T: Any> Bone.closest(filter: (T) -> Boolean = { true }): T? {
     val stack = arrayOf(this) + parents
     for (bone in stack) {
         (bone as? T)?.takeIf(filter)?.let { return it }
