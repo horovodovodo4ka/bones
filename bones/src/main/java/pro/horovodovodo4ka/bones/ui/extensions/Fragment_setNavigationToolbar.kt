@@ -2,6 +2,7 @@ package pro.horovodovodo4ka.bones.ui.extensions
 
 import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.goBack
 
@@ -10,7 +11,7 @@ import pro.horovodovodo4ka.bones.extensions.goBack
  * Used as shortcut with fragments which are bone siblings.
  */
 fun <T> T.addNavigationToToolbar(toolbar: Toolbar, iconResId: Int) where T : Fragment, T : BoneSibling<*> {
-    toolbar.navigationIcon = toolbar.context.getDrawable(iconResId)
+    toolbar.navigationIcon = ResourcesCompat.getDrawable(toolbar.context.resources, iconResId, null)
     toolbar.setNavigationOnClickListener { bone.goBack() }
 }
 
