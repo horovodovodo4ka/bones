@@ -94,7 +94,10 @@ abstract class Bone(
      * Parent bone of self. Null if bone is not in any hierarchy.
      */
     var parentBone: Bone? = null
-        private set
+        private set(value) {
+            if (parentBone != null && value == null) onOrphaned()
+            field = value
+        }
 
     /**
      * Bone's sibling. Usually is some visual part of application (activity, fragment, view, widget). Created by [Bone.seed] method when bone becomes active.
@@ -175,6 +178,13 @@ abstract class Bone(
         sibling?.onBoneChanged()
         notifySubscribers()
     }
+
+    /**
+     * Called when bone is removed from hierarchy - it become 'orphaned' and has no parent
+     *
+     * Also see [parentBone]
+     */
+    protected open fun onOrphaned() {}
 
     // Callback-less linking
 
