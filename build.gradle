@@ -3,7 +3,7 @@
 buildscript {
     ext.kotlin_version = '1.3.21'
 
-    ext.VERSION = "1.1.3"
+    ext.VERSION = "1.2.0"
     ext.BUILD = 18
 
     repositories {
