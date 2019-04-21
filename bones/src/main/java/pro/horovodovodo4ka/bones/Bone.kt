@@ -13,14 +13,14 @@ interface BoneInterface {
  * @constructor Creates new instance
  */
 abstract class Bone(
-    /**
-     * Used for disabling activating this on when parent bone is activated. Useful when deferred activation is required. Example: ViewPager
-     */
-    var ignoreAutoActivation: Boolean = false,
-    /**
-     * Persists sibling linked to bone on bone deactivation. Often goes with *inner class* bones which captures it's sibling instance in [Bone.seed] property.
-     */
-    var persistSibling: Boolean = false
+        /**
+         * Used for disabling activating this on when parent bone is activated. Useful when deferred activation is required. Example: ViewPager
+         */
+        var ignoreAutoActivation: Boolean = false,
+        /**
+         * Persists sibling linked to bone on bone deactivation. Often goes with *inner class* bones which captures it's sibling instance in [Bone.seed] property.
+         */
+        var persistSibling: Boolean = false
 ) : BoneInterface {
 
     //region internal API
@@ -95,11 +95,13 @@ abstract class Bone(
      */
     var parentBone: Bone? = null
         private set(value) {
-            when {
-                field == null && value != null -> onAdopted()
-                field != null && value == null -> onOrphaned()
-            }
+            val oldValue = field
+
+            if (oldValue != null && value == null) onOrphaned()
+
             field = value
+
+            if (oldValue == null && value != null) onAdopted()
         }
 
     /**
@@ -183,14 +185,14 @@ abstract class Bone(
     }
 
     /**
-     * Called when bone is removed from hierarchy - it become 'orphaned' and has no parent
+     * Called just before when bone is removed from hierarchy - it become 'orphaned' will no have parent after this moment
      *
      * Also see [parentBone]
      */
     protected open fun onOrphaned() {}
 
     /**
-     * Called when bone is added do hierarchy - it become 'adopted' and now has parent
+     * Called just after when bone is added to hierarchy - it become 'adopted' and now has parent
      *
      * Also see [parentBone]
      */
