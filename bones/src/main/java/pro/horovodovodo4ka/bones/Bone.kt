@@ -95,7 +95,10 @@ abstract class Bone(
      */
     var parentBone: Bone? = null
         private set(value) {
-            if (parentBone != null && value == null) onOrphaned()
+            when {
+                field == null && value != null -> onAdopted()
+                field != null && value == null -> onOrphaned()
+            }
             field = value
         }
 
@@ -185,6 +188,13 @@ abstract class Bone(
      * Also see [parentBone]
      */
     protected open fun onOrphaned() {}
+
+    /**
+     * Called when bone is added do hierarchy - it become 'adopted' and now has parent
+     *
+     * Also see [parentBone]
+     */
+    protected open fun onAdopted() {}
 
     // Callback-less linking
 
