@@ -11,7 +11,9 @@ abstract class ViewBone : Bone(persistSibling = true) {
         get() = (sibling as View).id
 
     override fun equals(other: Any?): Boolean {
-        other as? ViewBone ?: return false
+        if (other !is ViewBone) return false
         return siblingId == other.siblingId
     }
+
+    override fun hashCode() = siblingId
 }
