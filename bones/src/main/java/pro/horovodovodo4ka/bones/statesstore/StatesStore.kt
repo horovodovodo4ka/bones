@@ -2,11 +2,6 @@ package pro.horovodovodo4ka.bones.statesstore
 
 import android.os.Bundle
 
-/**
- * Created by annasidorova on 05.02.2018.
- * Copyrights SL-Tech 2017
- */
-
 const val STATE_STORABLE_ID_KEY = "STATE_STORABLE_ID_KEY"
 
 @Suppress("UNCHECKED_CAST")

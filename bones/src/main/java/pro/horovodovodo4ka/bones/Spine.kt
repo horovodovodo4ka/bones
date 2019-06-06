@@ -27,7 +27,7 @@ abstract class Spine(
     var transitionType: TransitionType = None
         private set
 
-    private val stack = ArrayList<Bone>(listOf(root)).also { add(root) }
+    private val stack = mutableListOf(root).also { add(root) }
 
     /**
      * Topmost bone of stack.

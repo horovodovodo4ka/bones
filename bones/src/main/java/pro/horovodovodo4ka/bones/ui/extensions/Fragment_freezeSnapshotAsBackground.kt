@@ -2,6 +2,8 @@ package pro.horovodovodo4ka.bones.ui.extensions
 
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import androidx.fragment.app.Fragment
 
 /**
@@ -10,6 +12,8 @@ import androidx.fragment.app.Fragment
  */
 fun Fragment.freezeSnapshotAsBackground() {
     view?.also {
-        it.background = BitmapDrawable(Resources.getSystem(), it.takeScreenshot())
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
+            it.background = BitmapDrawable(Resources.getSystem(), it.takeScreenshot())
+        }
     }
 }
