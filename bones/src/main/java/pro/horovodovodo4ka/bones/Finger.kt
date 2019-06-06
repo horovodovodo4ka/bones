@@ -31,7 +31,7 @@ abstract class Finger(
     var transitionType: TransitionType = None
         private set
 
-    private val stack = ArrayList<Bone>()
+    private val stack = mutableListOf<Bone>()
 
     init {
         rootPhalanx?.also {

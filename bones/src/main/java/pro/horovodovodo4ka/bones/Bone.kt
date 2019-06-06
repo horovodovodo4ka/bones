@@ -88,7 +88,7 @@ abstract class Bone(
     /**
      * Internal storage of descendants. Not private to allow subclasses to override behavior of transferring bone's activeness.
      */
-    protected val descendantsStore = HashSet<Bone>()
+    protected val descendantsStore = mutableSetOf<Bone>()
 
     /**
      * Parent bone of self. Null if bone is not in any hierarchy.
@@ -121,7 +121,7 @@ abstract class Bone(
      */
     val parents: Array<Bone>
         get() {
-            val ret = ArrayList<Bone>()
+            val ret = mutableListOf<Bone>()
 
             var bone = parentBone
             while (bone != null) {

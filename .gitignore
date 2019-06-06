@@ -10,3 +10,4 @@
 .idea
 /javadoc
 /ktlint
+buildSrc/build
