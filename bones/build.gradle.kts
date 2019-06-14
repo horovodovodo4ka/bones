@@ -5,8 +5,10 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
-    maven
+    `maven-publish`
 }
+
+group = "pro.horovodovodo4ka.bones"
 
 buildscript {
     repositories {
@@ -32,9 +34,6 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-        }
-        getByName("debug") {
-
         }
     }
 }
