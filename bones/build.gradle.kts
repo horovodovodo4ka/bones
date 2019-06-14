@@ -8,8 +8,6 @@ plugins {
     maven
 }
 
-group = "pro.horovodovodo4ka.bones"
-
 buildscript {
     repositories {
         maven(url = "https://plugins.gradle.org/m2/")
@@ -35,16 +33,23 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
+        getByName("debug") {
+
+        }
     }
 }
 
 apply<DokkaPlugin>()
 
 tasks {
-    val dokka by getting(DokkaTask::class) {
+    getting(DokkaTask::class) {
         skipEmptyPackages = true
         outputFormat = "html"
         outputDirectory = "$rootDir/javadoc"
+    }
+
+    create("install") {
+        dependsOn("build")
     }
 }
 

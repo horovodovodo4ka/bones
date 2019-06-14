@@ -6,6 +6,8 @@ plugins {
     maven
 }
 
+group = "pro.horovodovodo4ka.bones"
+
 buildscript {
     repositories {
         google()
