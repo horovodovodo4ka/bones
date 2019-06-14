@@ -47,10 +47,6 @@ tasks {
         outputFormat = "html"
         outputDirectory = "$rootDir/javadoc"
     }
-
-    create("install") {
-        dependsOn("build")
-    }
 }
 
 dependencies {
