@@ -1,12 +1,10 @@
-import com.android.build.gradle.AppExtension
-
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("android.extensions")
 }
 
-configure<AppExtension> {
+android {
     compileSdkVersion(Config.Android.compileSdkVersion)
     defaultConfig {
         minSdkVersion(Config.Android.minSdkVersion)

@@ -13,14 +13,14 @@ interface BoneInterface {
  * @constructor Creates new instance
  */
 abstract class Bone(
-        /**
-         * Used for disabling activating this on when parent bone is activated. Useful when deferred activation is required. Example: ViewPager
-         */
-        var ignoreAutoActivation: Boolean = false,
-        /**
-         * Persists sibling linked to bone on bone deactivation. Often goes with *inner class* bones which captures it's sibling instance in [Bone.seed] property.
-         */
-        var persistSibling: Boolean = false
+    /**
+     * Used for disabling activating this on when parent bone is activated. Useful when deferred activation is required. Example: ViewPager
+     */
+    var ignoreAutoActivation: Boolean = false,
+    /**
+     * Persists sibling linked to bone on bone deactivation. Often goes with *inner class* bones which captures it's sibling instance in [Bone.seed] property.
+     */
+    var persistSibling: Boolean = false
 ) : BoneInterface {
 
     //region internal API

@@ -2,7 +2,6 @@ package pro.horovodovodo4ka.bones.extensions
 
 import androidx.annotation.CallSuper
 import pro.horovodovodo4ka.bones.Bone
-import pro.horovodovodo4ka.bones.BoneInterface
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.NavigationBone
 import pro.horovodovodo4ka.bones.Spine
@@ -13,7 +12,7 @@ import pro.horovodovodo4ka.bones.ui.FragmentSibling
  *
  * @param filter optional filter if we need more specific selection either than just taking first bone.
  */
-inline fun <reified T: Any> Bone.closest(filter: (T) -> Boolean = { true }): T? {
+inline fun <reified T : Any> Bone.closest(filter: (T) -> Boolean = { true }): T? {
     val stack = arrayOf(this) + parents
     for (bone in stack) {
         (bone as? T)?.takeIf(filter)?.let { return it }
