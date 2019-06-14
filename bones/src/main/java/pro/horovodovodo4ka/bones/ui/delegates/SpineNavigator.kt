@@ -1,10 +1,10 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
+import android.util.Log
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import android.util.Log
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
@@ -83,7 +83,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
     }
 }
 
-private fun FragmentTransaction.add(fragment: Fragment, to: Int) : FragmentTransaction {
+private fun FragmentTransaction.add(fragment: Fragment, to: Int): FragmentTransaction {
     when (fragment) {
         is BoneDialogFragment<*> -> add(fragment, fragment.tag)
         is BoneAppCompatDialogFragment<*> -> add(fragment, fragment.tag)

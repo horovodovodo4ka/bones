@@ -3,7 +3,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintPlugin
 plugins {
     kotlin("jvm") version Config.kotlinVersion
     kotlin("kapt") version Config.kotlinVersion
-    id("maven")
+    maven
 }
 
 buildscript {
