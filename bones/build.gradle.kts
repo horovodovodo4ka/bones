@@ -5,7 +5,10 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    maven
 }
+
+group = "pro.horovodovodo4ka.bones"
 
 buildscript {
     repositories {

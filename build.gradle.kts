@@ -7,7 +7,6 @@ plugins {
 }
 
 buildscript {
-
     repositories {
         google()
         jcenter()
