@@ -1,10 +1,10 @@
-import com.android.build.gradle.LibraryExtension
 import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("android.extensions")
 }
 
 buildscript {
@@ -16,7 +16,7 @@ buildscript {
     }
 }
 
-configure<LibraryExtension> {
+android {
     compileSdkVersion(Config.Android.compileSdkVersion)
     defaultConfig {
         minSdkVersion(Config.Android.minSdkVersion)
@@ -59,7 +59,4 @@ dependencies {
         androidTestImplementation(runner)
         androidTestImplementation(espresso)
     }
-}
-repositories {
-    mavenCentral()
 }
