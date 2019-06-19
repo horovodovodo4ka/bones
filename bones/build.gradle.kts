@@ -5,7 +5,11 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    maven
+    `maven-publish`
 }
+
+group = "pro.horovodovodo4ka.bones"
 
 buildscript {
     repositories {
@@ -38,7 +42,7 @@ android {
 apply<DokkaPlugin>()
 
 tasks {
-    val dokka by getting(DokkaTask::class) {
+    getting(DokkaTask::class) {
         skipEmptyPackages = true
         outputFormat = "html"
         outputDirectory = "$rootDir/javadoc"
@@ -60,3 +64,6 @@ dependencies {
         androidTestImplementation(espresso)
     }
 }
+
+// for jitpack - https://github.com/sky-uk/gradle-maven-plugin#usage
+apply(from = "https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle")
