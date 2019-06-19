@@ -5,6 +5,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    maven
     `maven-publish`
 }
 
@@ -63,3 +64,6 @@ dependencies {
         androidTestImplementation(espresso)
     }
 }
+
+// for jitpack - https://github.com/sky-uk/gradle-maven-plugin#usage
+apply(from = "https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle")
