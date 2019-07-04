@@ -1,6 +1,5 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
-import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 
 /**
@@ -10,8 +9,7 @@ import androidx.fragment.app.FragmentManager
  */
 interface ActivityAppRestartCleaner {
     fun getSupportFragmentManager(): FragmentManager
-    fun onCreate(savedInstanceState: Bundle?) {
-        savedInstanceState ?: return
+    fun clearFragments() {
         getSupportFragmentManager().apply {
             fragments.forEach {
                 beginTransaction().remove(it).commitNow()
