@@ -1,13 +1,12 @@
 package pro.horovodovodo4ka.bones.sample
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Wrist
-import pro.horovodovodo4ka.bones.extensions.glueWith
 import pro.horovodovodo4ka.bones.extensions.processBackPress
 import pro.horovodovodo4ka.bones.sample.navigation.NavigationStack
 import pro.horovodovodo4ka.bones.sample.navigation.TabBar
@@ -15,6 +14,8 @@ import pro.horovodovodo4ka.bones.sample.presentation.TestForm
 import pro.horovodovodo4ka.bones.sample.presentation.TestScreen
 import pro.horovodovodo4ka.bones.statesstore.EmergencyPersister
 import pro.horovodovodo4ka.bones.statesstore.EmergencyPersisterInterface
+import pro.horovodovodo4ka.bones.statesstore.loadBones
+import pro.horovodovodo4ka.bones.statesstore.saveBones
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.NavigatorDelayedTransactions
 import pro.horovodovodo4ka.bones.ui.delegates.SpineNavigator
@@ -88,26 +89,16 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<AppCompatActivity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
-        if (!emergencyLoad(savedInstanceState, this)) {
-
-            super<ActivityAppRestartCleaner>.onCreate(savedInstanceState)
-
-            bone = RootBone(
+        loadBones(savedInstanceState) {
+            RootBone(
                 TabBar(
                     NavigationStack(TestScreen()),
                     TestForm(),
                     TestScreen()
                 )
             )
-
-            glueWith(bone)
-            bone.isActive = true
-
-            refreshUI()
-        } else {
-            glueWith(bone)
         }
     }
 
@@ -118,12 +109,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-
-        with(bone) {
-            sibling = null // remove strong pointer to existing activity instance
-            emergencySave {
-                it.bone = this
-            }
-        }
+        saveBones(bone)
     }
 }
+
