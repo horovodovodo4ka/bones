@@ -22,7 +22,7 @@ interface EmergencyPersisterInterface<T> {
     fun emergencyRemovePin()
 
     /**
-     * Executes closure previously set with [emergencySave]. **Must** be called in *onCreate*.
+     * Executes closure previously set with [saveBones]. **Must** be called in *onCreate*.
      *
      * @param savedInstanceState bundle in which emergency data could be.
      * @param instance new instance in which data should be restored
@@ -35,7 +35,7 @@ interface EmergencyPersisterInterface<T> {
      *
      * @param block **closure** which captures needed values so they can be applied on [emergencyLoad] call. Closure argument is a new instance.
      */
-    fun emergencySave(block: (T) -> Unit)
+    fun saveBones(block: (T) -> Unit)
 }
 
 /**
@@ -63,6 +63,6 @@ class EmergencyPersister<T : Any> : EmergencyPersisterInterface<T> {
 
     override fun emergencyPin(outState: Bundle) = persister.pin(outState)
     override fun emergencyLoad(savedInstanceState: Bundle?, instance: T): Boolean = persister.load(savedInstanceState, instance)
-    override fun emergencySave(block: (T) -> Unit) = persister.save(block)
+    override fun saveBones(block: (T) -> Unit) = persister.save(block)
     override fun emergencyRemovePin() = persister.unpin()
 }
