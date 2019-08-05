@@ -19,7 +19,7 @@ interface EmergencyPersisterInterface<T> {
     /**
      * Removes technical data. **Must** be called when sure instance will not be recreated. Must be called in *onStart* or *onResume*.
      */
-    fun emergencyRemovePin()
+    fun emergencyUnpin()
 
     /**
      * Executes closure previously set with [saveBones]. **Must** be called in *onCreate*.
@@ -64,5 +64,5 @@ class EmergencyPersister<T : Any> : EmergencyPersisterInterface<T> {
     override fun emergencyPin(outState: Bundle) = persister.pin(outState)
     override fun emergencyLoad(savedInstanceState: Bundle?, instance: T): Boolean = persister.load(savedInstanceState, instance)
     override fun saveBones(block: (T) -> Unit) = persister.save(block)
-    override fun emergencyRemovePin() = persister.unpin()
+    override fun emergencyUnpin() = persister.unpin()
 }

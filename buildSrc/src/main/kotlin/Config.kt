@@ -1,6 +1,6 @@
 object Config {
-    const val version = "1.2.6"
-    const val build = 23
+    const val version = "1.2.8"
+    const val build = 24
     const val kotlinVersion = "1.3.41"
 
     object Plugins {

@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
 
-        emergencyRemovePin()
+        emergencyUnpin()
 
         bone.dropExitStatus()
 
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        saveBones(bone)
+        saveBones()
     }
 }
 
