@@ -10,7 +10,6 @@ android {
         minSdkVersion(Config.Android.minSdkVersion)
         targetSdkVersion(Config.Android.targetSdkVersion)
         versionCode = Config.build
-        versionName = Config.version
         applicationId = "pro.horovodovodo4ka.bones.sample"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

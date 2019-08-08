@@ -9,8 +9,6 @@ plugins {
     `maven-publish`
 }
 
-group = "pro.horovodovodo4ka.bones"
-
 buildscript {
     repositories {
         maven(url = "https://plugins.gradle.org/m2/")
@@ -26,7 +24,6 @@ android {
         minSdkVersion(Config.Android.minSdkVersion)
         targetSdkVersion(Config.Android.targetSdkVersion)
         versionCode = Config.build
-        versionName = Config.version
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
