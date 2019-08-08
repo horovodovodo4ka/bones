@@ -1,4 +1,5 @@
 object Config {
+    const val version = "1.2.9"
     const val build = 25
     const val kotlinVersion = "1.3.41"
 
