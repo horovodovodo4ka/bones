@@ -29,11 +29,6 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
 
                 val tabFragment = bone.activeBone.sibling as? Fragment ?: return
 
-                // make screenshot and place background due android strange behavior with nested fragments
-                if (bone.transitionType != None) {
-                    manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
-                }
-
                 manager
                     .beginTransaction()
                     .apply {

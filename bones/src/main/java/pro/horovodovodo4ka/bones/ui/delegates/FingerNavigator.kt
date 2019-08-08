@@ -41,11 +41,6 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                     else -> FragmentTransaction.TRANSIT_NONE
                 }
 
-                // make screenshot and place background due android strange behavior with nested fragments
-                if (bone.transitionType != None) {
-                    manager.fragments.lastOrNull { it.isVisible }?.freezeSnapshotAsBackground()
-                }
-
                 manager
                     .beginTransaction()
                     .setTransition(transition)

@@ -31,5 +31,6 @@ fun <T : LayoutManager> RecyclerView.syncManager(scrollState: ScrollState, manag
  * Creates [LinearLayoutManager], bind with [RecyclerView], and also sync [ScrollState] with recycler.
  * Used to store portion of UI state of sibling and restore it when recreate sibling.
  */
+@Deprecated("Use layoutManager's `onSaveInstanceState` and `onRestoreInstanceState`")
 fun RecyclerView.syncLinear(context: Context?, scrollState: ScrollState): LinearLayoutManager =
         syncManager(scrollState) { LinearLayoutManager(context) }

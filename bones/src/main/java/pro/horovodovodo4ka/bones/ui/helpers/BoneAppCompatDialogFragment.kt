@@ -8,7 +8,7 @@ import pro.horovodovodo4ka.bones.extensions.dismiss
 
 abstract class BoneAppCompatDialogFragment<T : Bone> : AppCompatDialogFragment(), BoneSibling<T> {
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
 
         bone.dismiss()

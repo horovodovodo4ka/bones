@@ -9,7 +9,7 @@ import pro.horovodovodo4ka.bones.extensions.dismiss
 abstract class BoneBottomSheetDialogFragment<T : Bone> : BottomSheetDialogFragment(),
     BoneSibling<T> {
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
 
         bone.dismiss()

@@ -32,7 +32,7 @@ open class NavigationStackFragment : Fragment(),
 
     // region ContainerFragmentSibling
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         managerProvider = ::getChildFragmentManager
     }
