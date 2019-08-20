@@ -1,4 +1,8 @@
 # Bones
+[![](https://jitpack.io/v/horovodovodo4ka/bones.svg)](https://jitpack.io/#horovodovodo4ka/bones)
+
+# Disclaymer
+Bones is library for Android developers helping build application navigation and persistance of UI part. 
 
 ## License
 ```
