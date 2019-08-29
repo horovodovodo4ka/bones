@@ -1,9 +1,9 @@
 package pro.horovodovodo4ka.bones.ui.helpers
 
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import android.view.ViewGroup
 import pro.horovodovodo4ka.bones.Bone
 
 /**

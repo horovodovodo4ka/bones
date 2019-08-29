@@ -6,12 +6,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Finger.TransitionType
-import pro.horovodovodo4ka.bones.Finger.TransitionType.None
 import pro.horovodovodo4ka.bones.Finger.TransitionType.Popping
 import pro.horovodovodo4ka.bones.Finger.TransitionType.Pushing
 import pro.horovodovodo4ka.bones.Finger.TransitionType.Replacing
 import pro.horovodovodo4ka.bones.ui.FingerNavigatorInterface
-import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
 /**
  * Delegate that implements default finger navigation.

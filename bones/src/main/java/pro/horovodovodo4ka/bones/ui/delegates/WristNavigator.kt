@@ -7,9 +7,7 @@ import pro.horovodovodo4ka.bones.R
 import pro.horovodovodo4ka.bones.Wrist
 import pro.horovodovodo4ka.bones.Wrist.TransitionType.Decrementing
 import pro.horovodovodo4ka.bones.Wrist.TransitionType.Incrementing
-import pro.horovodovodo4ka.bones.Wrist.TransitionType.None
 import pro.horovodovodo4ka.bones.ui.WristNavigatorInterface
-import pro.horovodovodo4ka.bones.ui.extensions.freezeSnapshotAsBackground
 
 /**
  * Delegate that implements default wrist navigation.

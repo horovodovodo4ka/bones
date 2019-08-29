@@ -1,8 +1,8 @@
 package pro.horovodovodo4ka.bones.ui.extensions
 
-import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.extensions.goBack
 
