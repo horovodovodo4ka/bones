@@ -44,7 +44,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                             .remove(realFromFragment)
-                            .commit()
+                            .commitNow()
 
                         from = transaction.from
                         to = transaction.to
@@ -59,7 +59,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                                 transactionSetup?.invoke(this, toRealFragment)
                             }
                             .add(fragment = toRealFragment, to = containerId)
-                            .commit()
+                            .commitNow()
 
                         from = transaction.from
                         to = transaction.to
