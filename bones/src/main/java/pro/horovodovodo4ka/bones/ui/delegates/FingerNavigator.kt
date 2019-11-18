@@ -46,11 +46,11 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                         transactionSetup?.invoke(this, fragment)
                     }
                     .replace(containerId, fragment)
-                    .runOnCommit {
-                        super.refreshUI()
-                        bone.fingertip?.sibling?.refreshUI()
-                    }
-                    .commit()
+                    .commitNow()
+
+                super.refreshUI()
+
+                bone.fingertip?.sibling?.refreshUI()
             }
         }
 

@@ -71,6 +71,11 @@ abstract class Bone(
         }
 
     /**
+     * Marks bone as primary inside parent's descendants
+     */
+    var isPrimary: Boolean = false
+
+    /**
      * Technical function realize functionality of creation siblings and detaching them from bone. **Must** be called on subclasses which overrides *isActive* property.
      */
     protected fun syncSibling() {

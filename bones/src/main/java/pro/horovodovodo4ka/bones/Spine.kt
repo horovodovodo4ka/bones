@@ -50,7 +50,9 @@ abstract class Spine(
 
         add(bone)
         stack.add(bone)
+        last.isPrimary = false
         bone.isActive = isActive
+        bone.isPrimary = true
 
         transitionType = Presenting(last, skull)
         sibling?.refreshUI()
@@ -75,6 +77,7 @@ abstract class Spine(
         stack.clear()
         stack.addAll(reserved)
         stack.last().isActive = isActive
+        stack.last().isPrimary = true
 
         transitionType = Dismissing(target, skull)
         sibling?.refreshUI()

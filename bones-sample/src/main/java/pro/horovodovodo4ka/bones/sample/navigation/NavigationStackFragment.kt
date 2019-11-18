@@ -7,6 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_navigation_stack.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.extensions.present
@@ -68,6 +72,13 @@ open class NavigationStackFragment : Fragment(),
 
         modal_button.setOnClickListener {
             bone.present(TestScreen())
+        }
+
+        delayed_button.setOnClickListener {
+            GlobalScope.launch(Main) {
+                delay(2_000)
+                bone.present(TestScreen())
+            }
         }
 
         refreshUI()

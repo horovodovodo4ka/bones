@@ -71,10 +71,12 @@ abstract class Finger(
         add(bone)
         stack.add(bone)
         bone.isActive = isActive
+        bone.isPrimary = true
 
         transitionType = Pushing(last, fingertip)
         sibling?.refreshUI()
 
+        last?.isPrimary = false
         last?.isActive = false
 
         listeners.forEach { it.phalanxSwitched(transitionType) }
@@ -119,6 +121,7 @@ abstract class Finger(
         stack.clear()
         stack.addAll(reserved)
         stack.last().isActive = isActive
+        stack.last().isPrimary = true
 
         transitionType = Popping(oldBone, phalanx)
         sibling?.refreshUI()
@@ -157,6 +160,7 @@ abstract class Finger(
         add(with)
         stack.add(with)
         stack.last().isActive = isActive
+        stack.last().isPrimary = true
 
         transitionType = Replacing(oldBone, with)
         sibling?.refreshUI()

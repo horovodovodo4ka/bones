@@ -5,7 +5,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.Spine
+import pro.horovodovodo4ka.bones.Spine.TransitionType
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
@@ -23,13 +25,15 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
     override var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)? = null
 
     override fun refreshUI() {
-        super.refreshUI()
 
         val fromFragment = (bone.transitionType as? Dismissing)?.from?.sibling as? Fragment
 
-        fun execute(bone: Spine, transaction: Any) {
+        fun execute(bone: Spine, transaction: TransitionType) {
             with(bone.sibling as SpineNavigatorInterface<*>) {
                 val manager = (this@with.managerProvider ?: return)()
+
+                val from: Bone?
+                val to: Bone?
 
                 when (transaction) {
                     is Dismissing -> {
@@ -41,6 +45,9 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                             .remove(realFromFragment)
                             .commit()
+
+                        from = transaction.from
+                        to = transaction.to
                     }
                     is Presenting -> {
                         val toRealFragment = transaction.to?.sibling as? Fragment ?: return
@@ -53,6 +60,9 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                             }
                             .add(fragment = toRealFragment, to = containerId)
                             .commit()
+
+                        from = transaction.from
+                        to = transaction.to
                     }
                     else -> {
                         manager.fragments.forEach {
@@ -64,8 +74,16 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                                 .add(fragment = bone.sibling as Fragment, to = containerId)
                                 .commitNow()
                         }
+
+                        from = null
+                        to = bone.skull
                     }
                 }
+
+                super.refreshUI()
+
+                from?.sibling?.refreshUI()
+                to?.sibling?.refreshUI()
             }
         }
 

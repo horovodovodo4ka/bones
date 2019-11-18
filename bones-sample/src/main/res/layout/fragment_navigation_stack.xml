@@ -19,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <FrameLayout
         android:id="@+id/stack_fragment_container"
         android:layout_width="0dp"
@@ -31,6 +32,17 @@
     </FrameLayout>
 
     <Button
+        android:id="@+id/delayed_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="24dp"
+        android:text="delayed"
+        app:layout_constraintBottom_toTopOf="@+id/modal_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/push_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +50,8 @@
         android:layout_marginEnd="8dp"
         android:text="push"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="8dp" />
 
     <Button
         android:id="@+id/pop_button"
@@ -48,7 +61,8 @@
         android:layout_marginEnd="8dp"
         android:text="pop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/push_button" />
+        app:layout_constraintEnd_toStartOf="@+id/push_button"
+        android:layout_marginRight="8dp" />
 
     <Button
         android:id="@+id/replace_button"
@@ -58,7 +72,8 @@
         android:layout_marginEnd="8dp"
         android:text="replace"
         app:layout_constraintBottom_toTopOf="@+id/push_button"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="8dp" />
 
     <Button
         android:id="@+id/to_root_button"
@@ -68,14 +83,16 @@
         android:layout_marginEnd="8dp"
         android:text="root"
         app:layout_constraintBottom_toTopOf="@+id/pop_button"
-        app:layout_constraintEnd_toStartOf="@+id/replace_button" />
+        app:layout_constraintEnd_toStartOf="@+id/replace_button"
+        android:layout_marginRight="8dp" />
 
     <Button
         android:id="@+id/modal_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
         android:text="modal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
