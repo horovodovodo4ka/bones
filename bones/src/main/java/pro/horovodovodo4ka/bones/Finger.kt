@@ -38,6 +38,7 @@ abstract class Finger(
             add(it)
             stack.add(it)
         }
+        fingertip?.isPrimary = true
     }
 
     /**

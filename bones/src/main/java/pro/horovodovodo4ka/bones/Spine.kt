@@ -38,6 +38,10 @@ abstract class Spine(
     val vertebrae: Array<Bone>
         get() = stack.toTypedArray()
 
+    init {
+        skull.isPrimary = true
+    }
+
     /**
      * Adds bone to stack. It becomes skull
      *
