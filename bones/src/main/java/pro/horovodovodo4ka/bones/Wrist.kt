@@ -51,9 +51,11 @@ abstract class Wrist(
             val oldIndex = activeBoneIndex
             val oldBone = activeBone
 
-            activeBone.isActive = false
             activeBone.isPrimary = false
+            activeBone.isActive = false
+
             field = value
+
             activeBone.isActive = isActive
             activeBone.isPrimary = true
 

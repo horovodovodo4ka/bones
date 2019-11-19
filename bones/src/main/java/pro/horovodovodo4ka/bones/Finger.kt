@@ -69,16 +69,17 @@ abstract class Finger(
 
         val last = fingertip
 
+        last?.isPrimary = false
+        last?.isActive = false
+
         add(bone)
         stack.add(bone)
+
         bone.isActive = isActive
         bone.isPrimary = true
 
         transitionType = Pushing(last, fingertip)
         sibling?.refreshUI()
-
-        last?.isPrimary = false
-        last?.isActive = false
 
         listeners.forEach { it.phalanxSwitched(transitionType) }
         transitionType = None
@@ -128,6 +129,7 @@ abstract class Finger(
         sibling?.refreshUI()
 
         removed.forEach {
+            it.isPrimary = false
             it.isActive = false
             remove(it)
         }
@@ -160,13 +162,14 @@ abstract class Finger(
         stack.addAll(reserved)
         add(with)
         stack.add(with)
-        stack.last().isActive = isActive
-        stack.last().isPrimary = true
+        with.isActive = isActive
+        with.isPrimary = true
 
         transitionType = Replacing(oldBone, with)
         sibling?.refreshUI()
 
         removed.forEach {
+            it.isPrimary = false
             it.isActive = false
             remove(it)
         }

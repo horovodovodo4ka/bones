@@ -52,9 +52,12 @@ abstract class Spine(
 
         val last = skull
 
+        last.isPrimary = false
+        last.isActive = false
+
         add(bone)
         stack.add(bone)
-        last.isPrimary = false
+
         bone.isActive = isActive
         bone.isPrimary = true
 
@@ -80,14 +83,15 @@ abstract class Spine(
 
         stack.clear()
         stack.addAll(reserved)
-        stack.last().isActive = isActive
-        stack.last().isPrimary = true
+        skull.isActive = isActive
+        skull.isPrimary = true
 
         transitionType = Dismissing(target, skull)
         sibling?.refreshUI()
         transitionType = None
 
         removed.forEach {
+            it.isPrimary = false
             it.isActive = false
             remove(it)
         }

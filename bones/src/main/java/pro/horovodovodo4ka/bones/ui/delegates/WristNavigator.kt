@@ -39,10 +39,12 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                         }
                     }
                     .replace(containerId, tabFragment)
+                    .runOnCommit {
+                        super.refreshUI()
+                        bone.activeBone.sibling?.refreshUI()
+                    }
                     .commitNow()
 
-                super.refreshUI()
-                bone.activeBone.sibling?.refreshUI()
             }
         }
 
