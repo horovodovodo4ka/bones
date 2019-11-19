@@ -24,7 +24,7 @@ interface BoneSibling<T : Bone> {
      *
      * Default implementation notifies parent bone sibling about UI changes on current level of hierarchy.
      */
-    fun onRefresh() { }
+    fun onRefresh() {}
 
     /**
      * Should not be used directly. Used by internal API, links bone with it's sibling.
