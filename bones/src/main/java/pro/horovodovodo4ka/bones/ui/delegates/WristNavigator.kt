@@ -44,7 +44,6 @@ class WristNavigator<T : Wrist>(override val containerId: Int, private val anima
                         bone.activeBone.sibling?.refreshUI()
                     }
                     .commitNow()
-
             }
         }
 

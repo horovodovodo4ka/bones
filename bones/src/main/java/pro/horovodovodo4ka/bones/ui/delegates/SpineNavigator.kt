@@ -80,7 +80,6 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                         }
                     }
                 }
-
             }
         }
 

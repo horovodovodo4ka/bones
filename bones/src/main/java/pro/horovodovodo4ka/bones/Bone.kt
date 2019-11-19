@@ -107,7 +107,6 @@ abstract class Bone(
                 if (!persistSibling) sibling = null
             }
         }
-
     }
 
     /**
