@@ -88,6 +88,7 @@ abstract class Bone(
      */
     var isPrimary: Boolean = false
         set(value) {
+            if (field == value) return
             field = value
 
             onStateChange(Primacy(value))

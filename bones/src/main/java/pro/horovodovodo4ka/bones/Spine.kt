@@ -53,7 +53,6 @@ abstract class Spine(
         val last = skull
 
         last.isPrimary = false
-        last.isActive = false
 
         add(bone)
         stack.add(bone)
