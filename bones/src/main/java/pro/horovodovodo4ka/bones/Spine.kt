@@ -38,6 +38,10 @@ abstract class Spine(
     val vertebrae: Array<Bone>
         get() = stack.toTypedArray()
 
+    init {
+        skull.isPrimary = true
+    }
+
     /**
      * Adds bone to stack. It becomes skull
      *
@@ -48,9 +52,13 @@ abstract class Spine(
 
         val last = skull
 
+        last.isPrimary = false
+
         add(bone)
         stack.add(bone)
+
         bone.isActive = isActive
+        bone.isPrimary = true
 
         transitionType = Presenting(last, skull)
         sibling?.refreshUI()
@@ -74,13 +82,15 @@ abstract class Spine(
 
         stack.clear()
         stack.addAll(reserved)
-        stack.last().isActive = isActive
+        skull.isActive = isActive
+        skull.isPrimary = true
 
         transitionType = Dismissing(target, skull)
         sibling?.refreshUI()
         transitionType = None
 
         removed.forEach {
+            it.isPrimary = false
             it.isActive = false
             remove(it)
         }

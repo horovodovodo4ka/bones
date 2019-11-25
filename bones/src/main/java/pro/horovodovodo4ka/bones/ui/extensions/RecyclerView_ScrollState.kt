@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
  */
 @Deprecated("Use layoutManager's `onSaveInstanceState` and `onRestoreInstanceState`")
 fun <T : LayoutManager> RecyclerView.syncManager(scrollState: ScrollState, managerProvider: () -> T): T = managerProvider()
-        .also {
-            layoutManager = it
+    .also {
+        layoutManager = it
 
-            post {
-                scrollBy(scrollState.x, scrollState.y)
+        post {
+            scrollBy(scrollState.x, scrollState.y)
 
-                addOnScrollListener(object : OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        scrollState.x += dx
-                        scrollState.y += dy
-                    }
-                })
-            }
+            addOnScrollListener(object : OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    scrollState.x += dx
+                    scrollState.y += dy
+                }
+            })
         }
+    }
 
 /**
  * Creates [LinearLayoutManager], bind with [RecyclerView], and also sync [ScrollState] with recycler.
@@ -33,4 +33,4 @@ fun <T : LayoutManager> RecyclerView.syncManager(scrollState: ScrollState, manag
  */
 @Deprecated("Use layoutManager's `onSaveInstanceState` and `onRestoreInstanceState`")
 fun RecyclerView.syncLinear(context: Context?, scrollState: ScrollState): LinearLayoutManager =
-        syncManager(scrollState) { LinearLayoutManager(context) }
+    syncManager(scrollState) { LinearLayoutManager(context) }

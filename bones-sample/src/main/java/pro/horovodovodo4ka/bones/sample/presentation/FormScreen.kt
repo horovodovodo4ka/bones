@@ -39,7 +39,10 @@ class FormScreen : Fragment(),
 
     // region BoneSibling
 
-    override fun onBoneChanged() = refresh()
+    override fun onBoneChanged() {
+        if (!isResumed) return
+        refresh()
+    }
 
     // endregion
 

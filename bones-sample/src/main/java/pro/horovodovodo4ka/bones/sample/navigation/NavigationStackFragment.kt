@@ -2,13 +2,20 @@ package pro.horovodovodo4ka.bones.sample.navigation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_navigation_stack.*
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pro.horovodovodo4ka.bones.Bone
+import pro.horovodovodo4ka.bones.BoneStateValue
 import pro.horovodovodo4ka.bones.Finger
+import pro.horovodovodo4ka.bones.Primacy
 import pro.horovodovodo4ka.bones.extensions.present
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
@@ -70,11 +77,17 @@ open class NavigationStackFragment : Fragment(),
             bone.present(TestScreen())
         }
 
+        delayed_button.setOnClickListener {
+            GlobalScope.launch(Main) {
+                delay(2_000)
+                bone.present(TestScreen())
+            }
+        }
+
         refreshUI()
     }
 
     override fun onRefresh() {
-        super<FingerNavigatorInterface>.onRefresh()
 
         if (view == null) return
 
@@ -89,6 +102,10 @@ open class NavigationStackFragment : Fragment(),
                 else removeNavigationFromToolbar(toolbar)
             }
         }
+    }
+
+    override fun onBoneStateChange(state: BoneStateValue) {
+        if (state is Primacy) Log.d("primacy", "finger  ${bone.id.substring(0..7)} -> ${bone.isPrimary}")
     }
 
     // region BonePersisterInterface

@@ -36,6 +36,7 @@ abstract class Wrist(
 
     init {
         fingers.forEach { add(it) }
+        activeBone.isPrimary = true
     }
 
     /**
@@ -50,9 +51,13 @@ abstract class Wrist(
             val oldIndex = activeBoneIndex
             val oldBone = activeBone
 
+            activeBone.isPrimary = false
             activeBone.isActive = false
+
             field = value
+
             activeBone.isActive = isActive
+            activeBone.isPrimary = true
 
             transitionType = if (oldIndex > value) Decrementing(oldBone, activeBone) else Incrementing(oldBone, activeBone)
             sibling?.refreshUI()

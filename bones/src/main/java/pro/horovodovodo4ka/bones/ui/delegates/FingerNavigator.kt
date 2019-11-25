@@ -50,7 +50,7 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                         super.refreshUI()
                         bone.fingertip?.sibling?.refreshUI()
                     }
-                    .commit()
+                    .commitNow()
             }
         }
 
