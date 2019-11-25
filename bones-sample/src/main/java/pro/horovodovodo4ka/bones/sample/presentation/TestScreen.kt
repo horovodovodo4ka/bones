@@ -2,13 +2,16 @@ package pro.horovodovodo4ka.bones.sample.presentation
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_phalanx_test.*
+import pro.horovodovodo4ka.bones.BoneStateValue
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Phalanx
+import pro.horovodovodo4ka.bones.Primacy
 import pro.horovodovodo4ka.bones.extensions.uuid
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
@@ -44,6 +47,7 @@ class ScreenFragment : Fragment(),
         test_label.text = bone.uuid
 
         refreshUI()
+        onBoneChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -54,5 +58,9 @@ class ScreenFragment : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BonePersisterInterface>.onCreate(savedInstanceState)
         super<Fragment>.onCreate(savedInstanceState)
+    }
+
+    override fun onBoneStateChange(state: BoneStateValue) {
+        if (state is Primacy) Log.d("primacy", "phalanx ${bone.id.substring(0..7)} -> ${bone.isPrimary}")
     }
 }

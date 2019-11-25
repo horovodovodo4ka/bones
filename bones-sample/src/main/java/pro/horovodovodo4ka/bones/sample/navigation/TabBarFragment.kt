@@ -2,16 +2,20 @@ package pro.horovodovodo4ka.bones.sample.navigation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_tab_bar.*
 import pro.horovodovodo4ka.bones.Bone
+import pro.horovodovodo4ka.bones.BoneStateValue
 import pro.horovodovodo4ka.bones.Finger
+import pro.horovodovodo4ka.bones.Primacy
 import pro.horovodovodo4ka.bones.Wrist
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
+import pro.horovodovodo4ka.bones.ui.FragmentSibling
 import pro.horovodovodo4ka.bones.ui.WristNavigatorInterface
 import pro.horovodovodo4ka.bones.ui.delegates.WristNavigator
 import pro.horovodovodo4ka.bones.ui.extensions.indexOf
@@ -73,4 +77,8 @@ class TabBarFragment : Fragment(),
     }
 
     // endregion
+
+    override fun onBoneStateChange(state: BoneStateValue) {
+        if (state is Primacy) Log.d("primacy", "wrist   ${bone.id.substring(0..7)} -> ${bone.isPrimary}")
+    }
 }

@@ -7,6 +7,14 @@ interface BoneInterface {
     val sibling: BoneSibling<out Bone>?
 }
 
+interface BoneStateValue
+
+data class Activeness(val value: Boolean) : BoneStateValue
+
+data class Primacy(val value: Boolean) : BoneStateValue
+
+data class Adoption(val isAdopted: Boolean) : BoneStateValue
+
 /**
  * Bone class. Used for organize hierarchy and navigation inside that hierarchy.
  *
@@ -66,8 +74,25 @@ abstract class Bone(
         set(value) {
             if (field == value) return
             field = value
+
             syncSibling()
+
+            onStateChange(Activeness(value))
+            sibling?.onBoneStateChange(Activeness(value))
+
             descendantsStore.filter { !it.ignoreAutoActivation || !value }.forEach { it.isActive = value }
+        }
+
+    /**
+     * Marks bone as primary inside parent's descendants
+     */
+    var isPrimary: Boolean = false
+        set(value) {
+            if (field == value) return
+            field = value
+
+            onStateChange(Primacy(value))
+            sibling?.onBoneStateChange(Primacy(value))
         }
 
     /**
@@ -97,11 +122,19 @@ abstract class Bone(
         private set(value) {
             val oldValue = field
 
-            if (oldValue != null && value == null) onOrphaned()
+            if (oldValue != null && value == null) {
+                onOrphaned()
+                onStateChange(Adoption(false))
+                sibling?.onBoneStateChange(Adoption(false))
+            }
 
             field = value
 
-            if (oldValue == null && value != null) onAdopted()
+            if (oldValue == null && value != null) {
+                onAdopted()
+                onStateChange(Adoption(true))
+                sibling?.onBoneStateChange(Adoption(true))
+            }
         }
 
     /**
@@ -183,6 +216,11 @@ abstract class Bone(
         sibling?.onBoneChanged()
         notifySubscribers()
     }
+
+    /**
+     * Same as [onBoneChanged] but for current bone and specific states, can be custom
+     */
+    protected open fun onStateChange(state: BoneStateValue) {}
 
     /**
      * Called just before when bone is removed from hierarchy - it become 'orphaned' will no have parent after this moment

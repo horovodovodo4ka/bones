@@ -5,7 +5,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.Spine
+import pro.horovodovodo4ka.bones.Spine.TransitionType
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Dismissing
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
 import pro.horovodovodo4ka.bones.ui.SpineNavigatorInterface
@@ -23,11 +25,10 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
     override var transactionSetup: (FragmentTransaction.(targetFragment: Fragment) -> Unit)? = null
 
     override fun refreshUI() {
-        super.refreshUI()
 
         val fromFragment = (bone.transitionType as? Dismissing)?.from?.sibling as? Fragment
 
-        fun execute(bone: Spine, transaction: Any) {
+        fun execute(bone: Spine, transaction: TransitionType) {
             with(bone.sibling as SpineNavigatorInterface<*>) {
                 val manager = (this@with.managerProvider ?: return)()
 
@@ -40,7 +41,12 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                             .remove(realFromFragment)
-                            .commit()
+                            .runOnCommit {
+                                super.refreshUI()
+                                (realFromFragment as? BoneSibling<*>)?.refreshUI()
+                                transaction.to?.sibling?.refreshUI()
+                            }
+                            .commitNow()
                     }
                     is Presenting -> {
                         val toRealFragment = transaction.to?.sibling as? Fragment ?: return
@@ -52,16 +58,24 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                                 transactionSetup?.invoke(this, toRealFragment)
                             }
                             .add(fragment = toRealFragment, to = containerId)
-                            .commit()
+                            .runOnCommit {
+                                super.refreshUI()
+                                transaction.from?.sibling?.refreshUI()
+                                transaction.to.sibling?.refreshUI()
+                            }
+                            .commitNow()
                     }
                     else -> {
                         manager.fragments.forEach {
                             manager.beginTransaction().remove(it).commitNow()
                         }
-                        bone.vertebrae.forEach { bone ->
+                        bone.vertebrae.forEach { b ->
                             manager
                                 .beginTransaction()
-                                .add(fragment = bone.sibling as Fragment, to = containerId)
+                                .add(fragment = b.sibling as Fragment, to = containerId)
+                                .runOnCommit {
+                                    b.sibling?.refreshUI()
+                                }
                                 .commitNow()
                         }
                     }
