@@ -16,6 +16,7 @@ import pro.horovodovodo4ka.bones.Bone
 import pro.horovodovodo4ka.bones.BoneStateValue
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Primacy
+import pro.horovodovodo4ka.bones.extensions.dismiss
 import pro.horovodovodo4ka.bones.extensions.present
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
@@ -80,7 +81,16 @@ open class NavigationStackFragment : Fragment(),
         delayed_button.setOnClickListener {
             GlobalScope.launch(Main) {
                 delay(2_000)
+
+                val first = TestScreen()
+                bone.present(first)
+
+                delay(2_000)
+
                 bone.present(TestScreen())
+
+                delay(2_000)
+                first.dismiss()
             }
         }
 
