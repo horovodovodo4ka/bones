@@ -11,7 +11,7 @@ object Config {
     }
 
     object Libs {
-        const val appcompat = "androidx.appcompat:appcompat:1.1.0-rc01"
+        const val appcompat = "androidx.appcompat:appcompat:1.2.0-alpha01"
         const val material = "com.google.android.material:material:1.0.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
         const val vectorDrawable = "androidx.vectordrawable:vectordrawable:1.0.1"

@@ -12,6 +12,7 @@ import pro.horovodovodo4ka.bones.BoneStateValue
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Phalanx
 import pro.horovodovodo4ka.bones.Primacy
+import pro.horovodovodo4ka.bones.extensions.present
 import pro.horovodovodo4ka.bones.extensions.uuid
 import pro.horovodovodo4ka.bones.persistance.BonePersisterInterface
 import pro.horovodovodo4ka.bones.sample.R
@@ -24,7 +25,7 @@ class TestScreen : Phalanx(), NavigationStackPresentable {
     override val seed = { ScreenFragment() }
 
     val color = Random().let {
-        Color.argb(255, it.nextInt(256), it.nextInt(256), it.nextInt(256))
+        Color.argb(200, it.nextInt(256), it.nextInt(256), it.nextInt(256))
     }
 
     val uuid = String.uuid()
@@ -45,6 +46,10 @@ class ScreenFragment : Fragment(),
 
         view.setBackgroundColor(bone.color)
         test_label.text = bone.uuid
+
+        modal_btn.setOnClickListener {
+            bone.present(TestScreen())
+        }
 
         refreshUI()
         onBoneChanged()

@@ -1,6 +1,8 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
+import android.os.Build
 import android.util.Log
+import android.view.View.GONE
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -37,6 +39,17 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                         // 1) after restoring from state new sibling bound even if bone removed it's sibling, 2) if null then no restart happen and use old sibling
                         val realFromFragment = (transaction.from?.sibling as? Fragment ?: fromFragment)?.takeIf { !it.isDetached } ?: return
 
+                        val idx = manager.fragments.indexOf(realFromFragment)
+
+                        // waiting for androidx. 1.2.0 - animation playing on top of all views
+                        if (idx < manager.fragments.lastIndex) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                realFromFragment.view?.elevation = -0.1f
+                            } else {
+                                realFromFragment.view?.visibility = GONE
+                            }
+                        }
+
                         manager
                             .beginTransaction()
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
@@ -47,6 +60,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                                 transaction.to?.sibling?.refreshUI()
                             }
                             .commitNow()
+
                     }
                     is Presenting -> {
                         val toRealFragment = transaction.to?.sibling as? Fragment ?: return
