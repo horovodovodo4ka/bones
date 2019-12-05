@@ -71,17 +71,25 @@ abstract class Spine(
      * Removes bone and all bones above it in stack. If not specified then skull dismissed.
      *
      * @param bone bone to be removed
+     * @param dismissOverlapping if true then dismiss also bones over current. Default is **false**
      */
-    fun dismiss(bone: Bone? = null) {
+    fun dismiss(bone: Bone? = null, dismissOverlapping: Boolean = false) {
         val target = bone ?: stack.last()
         val idx = stack.indexOf(target)
         if (idx < 1) return
 
-        val removed = stack.subList(idx, stack.size).toTypedArray()
-        val reserved = stack.subList(0, idx).toTypedArray()
+        val removed: List<Bone>
+        if (dismissOverlapping) {
+            removed = stack.subList(idx, stack.size)
+            val reserved = stack.subList(0, idx)
 
-        stack.clear()
-        stack.addAll(reserved)
+            stack.clear()
+            stack.addAll(reserved)
+        } else {
+            removed = listOf(target)
+            stack.remove(target)
+        }
+
         skull.isActive = isActive
         skull.isPrimary = true
 

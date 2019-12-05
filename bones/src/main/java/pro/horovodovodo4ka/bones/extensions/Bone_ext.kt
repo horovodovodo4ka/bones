@@ -36,11 +36,12 @@ fun Bone.present(bone: Bone? = null) {
  * If parameter not passed then trying dismiss bone on which this method called
  *
  * @param bone bone to dismiss
+ * @param dismissOverlapping if true then dismiss also bones over current. Default is **false**
  *
  * @see [Spine.dismiss]
  */
-fun Bone.dismiss(bone: Bone? = null) {
-    closest<Spine>()?.dismiss(bone ?: this)
+fun Bone.dismiss(bone: Bone? = null, dismissOverlapping: Boolean = false) {
+    closest<Spine>()?.dismiss(bone ?: this, dismissOverlapping)
 }
 
 /**
