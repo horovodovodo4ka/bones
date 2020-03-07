@@ -60,7 +60,6 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                                 transaction.to?.sibling?.refreshUI()
                             }
                             .commitNow()
-
                     }
                     is Presenting -> {
                         val toRealFragment = transaction.to?.sibling as? Fragment ?: return
