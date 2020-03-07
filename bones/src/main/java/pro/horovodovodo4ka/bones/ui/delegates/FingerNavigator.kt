@@ -33,9 +33,9 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                 val fragment = bone.fingertip?.sibling as? Fragment ?: return
 
                 val transition = when (transaction) {
-                    is Pushing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-                    is Popping -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-                    is Replacing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    is Pushing -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
+                    is Popping -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    is Replacing -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
                     else -> FragmentTransaction.TRANSIT_NONE
                 }
 

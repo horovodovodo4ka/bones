@@ -52,7 +52,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
 
                         manager
                             .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .remove(realFromFragment)
                             .runOnCommit {
                                 super.refreshUI()
@@ -67,7 +67,7 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
 
                         manager
                             .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                             .apply {
                                 transactionSetup?.invoke(this, toRealFragment)
                             }

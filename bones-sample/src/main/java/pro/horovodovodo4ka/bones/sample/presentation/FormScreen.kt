@@ -66,7 +66,7 @@ class FormScreen : Fragment(),
     private fun refresh() {
         intervalLabel.text = when {
             dateField1.value != null && dateField2.value != null ->
-                formatter.format(dateField1.value) + " - " + formatter.format(dateField2.value)
+                formatter.format(dateField1.value!!) + " - " + formatter.format(dateField2.value!!)
             else ->
                 "Choose both dates"
         }
