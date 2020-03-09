@@ -9,9 +9,14 @@
         tools:context=".MainActivity">
 
     <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/wrist_container" app:layout_constraintBottom_toTopOf="@+id/navigation_bar">
+        android:id="@+id/wrist_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/navigation_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 

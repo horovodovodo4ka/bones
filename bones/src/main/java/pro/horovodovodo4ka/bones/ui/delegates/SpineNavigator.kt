@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commitNow
 import pro.horovodovodo4ka.bones.BoneSibling
 import pro.horovodovodo4ka.bones.Spine
 import pro.horovodovodo4ka.bones.Spine.TransitionType
@@ -39,57 +40,48 @@ class SpineNavigator<T : Spine>(override val containerId: Int = android.R.id.con
                         // 1) after restoring from state new sibling bound even if bone removed it's sibling, 2) if null then no restart happen and use old sibling
                         val realFromFragment = (transaction.from?.sibling as? Fragment ?: fromFragment)?.takeIf { !it.isDetached } ?: return
 
-                        val idx = manager.fragments.indexOf(realFromFragment)
+                        manager.commitNow {
+                            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
 
-                        // waiting for androidx. 1.2.0 - animation playing on top of all views
-                        if (idx < manager.fragments.lastIndex) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                realFromFragment.view?.elevation = -0.1f
-                            } else {
-                                realFromFragment.view?.visibility = GONE
-                            }
-                        }
+                            remove(realFromFragment)
 
-                        manager
-                            .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                            .remove(realFromFragment)
-                            .runOnCommit {
+                            runOnCommit {
                                 super.refreshUI()
                                 (realFromFragment as? BoneSibling<*>)?.refreshUI()
                                 transaction.to?.sibling?.refreshUI()
                             }
-                            .commitNow()
+                        }
                     }
                     is Presenting -> {
                         val toRealFragment = transaction.to?.sibling as? Fragment ?: return
 
-                        manager
-                            .beginTransaction()
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                            .apply {
-                                transactionSetup?.invoke(this, toRealFragment)
-                            }
-                            .add(fragment = toRealFragment, to = containerId)
-                            .runOnCommit {
+                        manager.commitNow {
+                            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+
+                            transactionSetup?.invoke(this, toRealFragment)
+
+                            add(fragment = toRealFragment, to = containerId)
+
+                            runOnCommit {
                                 super.refreshUI()
                                 transaction.from?.sibling?.refreshUI()
                                 transaction.to.sibling?.refreshUI()
                             }
-                            .commitNow()
+                        }
                     }
                     else -> {
-                        manager.fragments.forEach {
-                            manager.beginTransaction().remove(it).commitNow()
-                        }
-                        bone.vertebrae.forEach { b ->
-                            manager
-                                .beginTransaction()
-                                .add(fragment = b.sibling as Fragment, to = containerId)
-                                .runOnCommit {
-                                    b.sibling?.refreshUI()
+                        with(manager) {
+                            fragments.forEach {
+                                commitNow { remove(it) }
+                            }
+                            bone.vertebrae.forEach { b ->
+                                commitNow {
+                                    add(fragment = b.sibling as Fragment, to = containerId)
+                                    runOnCommit {
+                                        b.sibling?.refreshUI()
+                                    }
                                 }
-                                .commitNow()
+                            }
                         }
                     }
                 }

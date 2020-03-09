@@ -1,7 +1,7 @@
 object Config {
-    const val version = "1.2.11"
-    const val build = 25
-    const val kotlinVersion = "1.3.41"
+    const val version = "1.4.4"
+    const val build = 30
+    const val kotlinVersion = "1.3.61"
 
     object Plugins {
         const val ktlint = "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:3.2.0"
@@ -12,6 +12,8 @@ object Config {
 
     object Libs {
         const val appcompat = "androidx.appcompat:appcompat:1.2.0-alpha01"
+        const val fragment = "androidx.fragment:fragment:1.2.2"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.2.2"
         const val material = "com.google.android.material:material:1.0.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
         const val vectorDrawable = "androidx.vectordrawable:vectordrawable:1.0.1"

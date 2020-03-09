@@ -4,6 +4,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commitNow
 import pro.horovodovodo4ka.bones.Finger
 import pro.horovodovodo4ka.bones.Finger.TransitionType
 import pro.horovodovodo4ka.bones.Finger.TransitionType.Popping
@@ -33,24 +34,27 @@ class FingerNavigator<T : Finger>(override val containerId: Int) : FingerNavigat
                 val fragment = bone.fingertip?.sibling as? Fragment ?: return
 
                 val transition = when (transaction) {
-                    is Pushing -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-                    is Popping -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-                    is Replacing -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
+                    is Pushing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
+                    is Popping -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
+                    is Replacing -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
                     else -> FragmentTransaction.TRANSIT_NONE
                 }
 
-                manager
-                    .beginTransaction()
-                    .setTransition(transition)
-                    .apply {
-                        transactionSetup?.invoke(this, fragment)
-                    }
-                    .replace(containerId, fragment)
-                    .runOnCommit {
+                val oldFragment = manager.fragments.lastOrNull()
+
+                if (oldFragment == fragment) return@with
+
+                manager.commitNow {
+                    setTransition(transition)
+                    transactionSetup?.invoke(this, fragment)
+
+                    replace(containerId, fragment)
+
+                    runOnCommit {
                         super.refreshUI()
                         bone.fingertip?.sibling?.refreshUI()
                     }
-                    .commitNow()
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaPlugin
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.library")
@@ -21,6 +22,17 @@ buildscript {
 }
 
 android {
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    tasks.withType<KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+
     compileSdkVersion(Config.Android.compileSdkVersion)
     defaultConfig {
         minSdkVersion(Config.Android.minSdkVersion)
@@ -55,6 +67,8 @@ dependencies {
 
     with(Config.Libs) {
         implementation(appcompat)
+        implementation(fragment)
+        implementation(fragmentKtx)
         implementation(material)
     }
 
