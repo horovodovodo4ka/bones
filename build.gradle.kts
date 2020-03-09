@@ -5,6 +5,8 @@ plugins {
     kotlin("kapt") version Config.kotlinVersion
 }
 
+group = "pro.horovodovodo4ka"
+
 buildscript {
     repositories {
         google()
