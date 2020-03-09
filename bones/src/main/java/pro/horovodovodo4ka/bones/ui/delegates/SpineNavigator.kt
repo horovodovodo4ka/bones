@@ -1,8 +1,6 @@
 package pro.horovodovodo4ka.bones.ui.delegates
 
-import android.os.Build
 import android.util.Log
-import android.view.View.GONE
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
