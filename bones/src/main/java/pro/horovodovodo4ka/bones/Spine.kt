@@ -39,7 +39,14 @@ abstract class Spine(
         get() = stack.toTypedArray()
 
     init {
+        isPrimary = true
         skull.isPrimary = true
+    }
+
+    override fun onStateChange(state: BoneStateValue) {
+        super.onStateChange(state)
+
+        skull.isPrimary = isPrimary
     }
 
     /**
@@ -58,7 +65,7 @@ abstract class Spine(
         stack.add(bone)
 
         bone.isActive = isActive
-        bone.isPrimary = true
+        bone.isPrimary = isPrimary
 
         transitionType = Presenting(last, skull)
         sibling?.refreshUI()
@@ -91,7 +98,7 @@ abstract class Spine(
         }
 
         skull.isActive = isActive
-        skull.isPrimary = true
+        skull.isPrimary = isPrimary
 
         transitionType = Dismissing(target, skull)
         sibling?.refreshUI()

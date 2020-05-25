@@ -38,7 +38,15 @@ abstract class Finger(
             add(it)
             stack.add(it)
         }
+
+        isPrimary = true
         fingertip?.isPrimary = true
+    }
+
+    override fun onStateChange(state: BoneStateValue) {
+        super.onStateChange(state)
+
+        fingertip?.isPrimary = isPrimary
     }
 
     /**
@@ -76,7 +84,7 @@ abstract class Finger(
         stack.add(bone)
 
         bone.isActive = isActive
-        bone.isPrimary = true
+        bone.isPrimary = isPrimary
 
         transitionType = Pushing(last, fingertip)
         sibling?.refreshUI()
@@ -123,7 +131,7 @@ abstract class Finger(
         stack.clear()
         stack.addAll(reserved)
         stack.last().isActive = isActive
-        stack.last().isPrimary = true
+        stack.last().isPrimary = isPrimary
 
         transitionType = Popping(oldBone, phalanx)
         sibling?.refreshUI()
@@ -163,7 +171,7 @@ abstract class Finger(
         add(with)
         stack.add(with)
         with.isActive = isActive
-        with.isPrimary = true
+        with.isPrimary = isPrimary
 
         transitionType = Replacing(oldBone, with)
         sibling?.refreshUI()

@@ -36,7 +36,15 @@ abstract class Wrist(
 
     init {
         fingers.forEach { add(it) }
+
+        isPrimary = true
         activeBone.isPrimary = true
+    }
+
+    override fun onStateChange(state: BoneStateValue) {
+        super.onStateChange(state)
+
+        activeBone.isPrimary = isPrimary
     }
 
     /**
@@ -57,7 +65,7 @@ abstract class Wrist(
             field = value
 
             activeBone.isActive = isActive
-            activeBone.isPrimary = true
+            activeBone.isPrimary = isPrimary
 
             transitionType = if (oldIndex > value) Decrementing(oldBone, activeBone) else Incrementing(oldBone, activeBone)
             sibling?.refreshUI()

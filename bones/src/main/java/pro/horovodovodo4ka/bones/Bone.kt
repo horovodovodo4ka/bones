@@ -1,5 +1,6 @@
 package pro.horovodovodo4ka.bones
 
+import androidx.annotation.CallSuper
 import pro.horovodovodo4ka.bones.extensions.uuid
 import java.lang.ref.WeakReference
 
@@ -220,6 +221,7 @@ abstract class Bone(
     /**
      * Same as [onBoneChanged] but for current bone and specific states, can be custom
      */
+    @CallSuper
     protected open fun onStateChange(state: BoneStateValue) {}
 
     /**
