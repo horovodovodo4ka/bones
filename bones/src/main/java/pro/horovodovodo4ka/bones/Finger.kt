@@ -46,7 +46,9 @@ abstract class Finger(
     override fun onStateChange(state: BoneStateValue) {
         super.onStateChange(state)
 
-        fingertip?.isPrimary = isPrimary
+        if (state is Primacy) {
+            fingertip?.isPrimary = isPrimary
+        }
     }
 
     /**

@@ -46,7 +46,9 @@ abstract class Spine(
     override fun onStateChange(state: BoneStateValue) {
         super.onStateChange(state)
 
-        skull.isPrimary = isPrimary
+        if (state is Primacy) {
+            skull.isPrimary = isPrimary
+        }
     }
 
     /**

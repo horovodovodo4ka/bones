@@ -44,7 +44,9 @@ abstract class Wrist(
     override fun onStateChange(state: BoneStateValue) {
         super.onStateChange(state)
 
-        activeBone.isPrimary = isPrimary
+        if (state is Primacy) {
+            activeBone.isPrimary = isPrimary
+        }
     }
 
     /**
