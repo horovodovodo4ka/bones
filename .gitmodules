@@ -1,0 +1,3 @@
+[submodule "mavenizer"]
+	path = mavenizer
+	url = https://github.com/horovodovodo4ka/mavenizer

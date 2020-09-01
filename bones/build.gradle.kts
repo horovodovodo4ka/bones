@@ -79,5 +79,5 @@ dependencies {
     }
 }
 
-// for jitpack - https://github.com/sky-uk/gradle-maven-plugin#usage
-apply(from = "https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle")
+// for jitpack
+apply(from = "${project.rootDir}/mavenizer/gradle-mavenizer.gradle")
