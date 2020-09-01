@@ -101,8 +101,6 @@ class MainActivity : AppCompatActivity(),
                 )
             )
         }
-
-        this.findViewById<View>(android.R.id.content).setBackgroundColor(resources.getColor(android.R.color.white))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
