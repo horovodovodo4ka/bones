@@ -3,6 +3,9 @@
 
 # Disclaimer
 Bones is library for Android developers helping build application navigation and persistance of UI part. 
+```
+implementation("pro.horovodovodo4ka:bones:1.4.7")
+```
 
 ```
 implementation("pro.horovodovodo4ka:bones:1.4.8")
