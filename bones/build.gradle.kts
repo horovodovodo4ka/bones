@@ -1,11 +1,10 @@
-import org.jetbrains.dokka.gradle.DokkaPlugin
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("android.extensions")
+    id("org.jetbrains.dokka") version "1.4.0-rc"
     maven
     `maven-publish`
 }
@@ -15,9 +14,6 @@ group = "pro.horovodovodo4ka.bones"
 buildscript {
     repositories {
         maven(url = "https://plugins.gradle.org/m2/")
-    }
-    dependencies {
-        classpath(Config.Plugins.dokka)
     }
 }
 
@@ -51,13 +47,12 @@ android {
     }
 }
 
-apply<DokkaPlugin>()
-
-tasks {
-    getting(DokkaTask::class) {
-        skipEmptyPackages = true
-        outputFormat = "html"
-        outputDirectory = "$rootDir/javadoc"
+tasks.dokkaHtml.configure {
+    outputDirectory = "$rootDir/javadoc"
+    dokkaSourceSets {
+        configureEach {
+            skipEmptyPackages = true
+        }
     }
 }
 

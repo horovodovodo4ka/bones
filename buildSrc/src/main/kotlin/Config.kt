@@ -4,8 +4,7 @@ object Config {
     const val kotlinVersion = "1.3.72"
 
     object Plugins {
-        const val ktlint = "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:3.2.0"
-        const val dokka = "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
+        const val ktlint = "org.jlleitschuh.gradle:ktlint-gradle:9.3.0"
         const val android = "com.android.tools.build:gradle:4.0.1"
         const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
