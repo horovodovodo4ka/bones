@@ -1,6 +1,7 @@
 package pro.horovodovodo4ka.bones.sample
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import pro.horovodovodo4ka.bones.Bone
@@ -100,6 +101,8 @@ class MainActivity : AppCompatActivity(),
                 )
             )
         }
+
+        this.findViewById<View>(android.R.id.content).setBackgroundColor(resources.getColor(android.R.color.white))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

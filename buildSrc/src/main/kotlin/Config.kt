@@ -1,5 +1,5 @@
 object Config {
-    const val version = "1.4.8"
+    const val version = "1.4.9"
     const val build = 34
     const val kotlinVersion = "1.3.72"
 
@@ -10,12 +10,12 @@ object Config {
     }
 
     object Libs {
-        const val appcompat = "androidx.appcompat:appcompat:1.2.0-alpha01"
-        const val fragment = "androidx.fragment:fragment:1.2.2"
-        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.2.2"
-        const val material = "com.google.android.material:material:1.0.0"
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta1"
-        const val vectorDrawable = "androidx.vectordrawable:vectordrawable:1.0.1"
+        const val appcompat = "androidx.appcompat:appcompat:1.2.0"
+        const val fragment = "androidx.fragment:fragment:1.2.5"
+        const val fragmentKtx = "androidx.fragment:fragment-ktx:1.2.5"
+        const val material = "com.google.android.material:material:1.2.0"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0"
+        const val vectorDrawable = "androidx.vectordrawable:vectordrawable:1.1.0"
     }
 
     object TestLibs {
