@@ -1,5 +1,5 @@
 object Config {
-    const val version = "1.4.12"
+    const val version = "1.4.13"
     const val build = 34
     const val kotlinVersion = "1.3.72"
 
@@ -25,7 +25,7 @@ object Config {
     }
 
     object Android {
-        const val minSdkVersion = 15
+        const val minSdkVersion = 16
         const val targetSdkVersion = 29
         const val compileSdkVersion = 29
     }

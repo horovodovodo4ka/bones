@@ -10,7 +10,8 @@ import pro.horovodovodo4ka.bones.Bone
  * Wrapper for collection of bones targeted on optimized use with PagerAdapter.
  * Used as is
  */
-class BonesFragmentPagerAdapter(private val fragmentManager: FragmentManager, private val tabs: List<Pair<String, Bone>>, behavior: Int = BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) : FragmentPagerAdapter(fragmentManager, behavior) {
+class BonesFragmentPagerAdapter(private val fragmentManager: FragmentManager, private val tabs: List<Pair<String, Bone>>, behavior: Int = BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) :
+    FragmentPagerAdapter(fragmentManager, behavior) {
     override fun getItem(position: Int): Fragment = tabs[position].second.also { it.isActive = true }.sibling as Fragment
     override fun getPageTitle(position: Int): CharSequence? = tabs[position].first
     override fun getCount(): Int = tabs.size
