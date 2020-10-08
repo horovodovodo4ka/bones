@@ -5,6 +5,15 @@ import pro.horovodovodo4ka.bones.Spine.TransitionType.None
 import pro.horovodovodo4ka.bones.Spine.TransitionType.Presenting
 
 /**
+ * Used to mark bones as overlays (transparent etc.)
+ * This causes previously visible bone stays primary without loosing display context when presenting.
+ * This does makes sense only for modal ([Spine]) navigation
+ */
+interface PresentingOverlayBone
+
+abstract class DialogBone(ignoreAutoActivation: Boolean = false, persistSibling: Boolean = false) : Phalanx(ignoreAutoActivation, persistSibling), PresentingOverlayBone
+
+/**
  * Represents mechanic of modal screens. Provides methods for presenting and dismissing.
  * As [Finger] contains stack of presented bones, where only one topmost bone called skull is active when Spine is active.
  */
@@ -61,7 +70,7 @@ abstract class Spine(
 
         val last = skull
 
-        last.isPrimary = false
+        last.takeIf { bone !is PresentingOverlayBone }?.isPrimary = false
 
         add(bone)
         stack.add(bone)

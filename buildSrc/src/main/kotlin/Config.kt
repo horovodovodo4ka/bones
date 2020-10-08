@@ -1,7 +1,7 @@
 object Config {
-    const val version = "1.4.14"
+    const val version = "1.5.0"
     const val build = 34
-    const val kotlinVersion = "1.3.72"
+    const val kotlinVersion = "1.4.10"
 
     object Plugins {
         const val ktlint = "org.jlleitschuh.gradle:ktlint-gradle:9.3.0"

@@ -1,19 +1,20 @@
 package pro.horovodovodo4ka.bones.sample.ui.helpers
 
-import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import pro.horovodovodo4ka.bones.ui.extensions.takeScreenshot
+import androidx.fragment.app.Fragment
+import kotlin.DeprecationLevel.ERROR
 
-class SnapshotFragment : Fragment() {
+class SnapshotFragment @Deprecated("Used before 29 android sdk", level = ERROR) constructor() : Fragment() {
+
     companion object {
+
+        @Deprecated("Used before 29 android sdk", level = ERROR)
         fun snapshotFrom(view: View): SnapshotFragment {
-            val bg = BitmapDrawable(Resources.getSystem(), view.takeScreenshot())
-            return SnapshotFragment().also { it.background = bg }
+            TODO()
         }
     }
 
